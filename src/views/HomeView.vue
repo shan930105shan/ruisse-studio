@@ -3,6 +3,9 @@
 import Navbar from '../components/Navbar.vue'
 import Typewriter from '@/components/Typewriter.vue';
 import PricingScroll from '@/components/PricingScroll.vue'; // 引入新組件
+import PlanDetail1 from '@/components/PlanDetail-1.vue'; // 引入新組件
+import PlanDetail2 from '@/components/PlanDetail-2.vue'; // 引入新組件
+import ContactUs from '@/components/ContactUs.vue';
 </script>
 
 <template>
@@ -38,6 +41,20 @@ import PricingScroll from '@/components/PricingScroll.vue'; // 引入新組件
     <section id="pricing">
       <PricingScroll />
     </section>
+
+    <section id="work">
+      <PlanDetail1 />
+      <PlanDetail2 />
+      <PlanDetail1 />
+      <PlanDetail2 />
+      <PlanDetail1 />
+      <PlanDetail2 />
+    </section>
+
+    <section id="contact">
+      <ContactUs />
+    </section>
+    
 
     <footer class="bg-[#f2eedc] text-gray-500 text-[10px] md:text-xs py-10 tracking-widest uppercase text-center">
       © RUISSE STUDIO ALL RIGHTS RESERVED.

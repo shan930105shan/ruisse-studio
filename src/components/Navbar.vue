@@ -4,16 +4,31 @@
       <img src="@/assets/images/logo-dark.png" alt="Logo" />
     </div>
     <ul class="nav-links">
-      <li @click="scrollToSection('about-us')" class="nav-item">關於我們</li>
+      <li @click="goToHome" class="cursor-pointer hover:opacity-50 transition-opacity">
+    首頁
+  </li>
+      <li @click="goToAbout" class="cursor-pointer hover:opacity-50 transition-opacity">
+    關於我們
+  </li>
       <li @click="scrollToSection('pricing')" class="nav-item">方案內容</li>
-      <li class="nav-item">作品參考</li>
+      <li @click="scrollToSection('work')" class="nav-item">作品參考</li>
       <li class="nav-item">客戶回饋</li>
-      <li class="nav-item">拍攝預約點我</li>
+      <li @click="scrollToSection('contact')" class="nav-item">拍攝預約點我</li>
     </ul>
   </nav>
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+const goToHome = () => {
+  router.push('/') // 跳轉到關於我們頁面
+}
+
+const goToAbout = () => {
+  router.push('/about') // 跳轉到關於我們頁面
+}
 const scrollToSection = (id) => {
   if (id === 'top') {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -49,7 +64,7 @@ const scrollToSection = (id) => {
   justify-content: space-between;
   align-items: center;
   padding: 0 50px;
-  background-color: white; /* 確保背景是不透明的白色 */
+  background-color: #f2eedc; /* 確保背景是不透明的白色 */
   z-index: 1000; /* 確保它在影片之上 */
 }
 

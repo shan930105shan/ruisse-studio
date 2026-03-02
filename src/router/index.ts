@@ -8,6 +8,12 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView // 這代表首頁會載入 HomeView.vue
+    },
+    {
+      path: '/about',
+      name: 'about',
+      // 使用延遲加載提高性能
+      component: () => import('../views/AboutUs.vue')
     }
   ]
 })
