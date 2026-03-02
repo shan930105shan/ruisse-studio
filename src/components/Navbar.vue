@@ -1,13 +1,14 @@
 <template>
   <nav class="navbar">
-    <div class="logo">
-      <img src="@/assets/logo.png" alt="Logo" />
+    <div class="logo" @click="scrollToSection('hero')" style="cursor: pointer;">
+      <img src="@/assets/images/logo-dark.png" alt="Logo" />
     </div>
     <ul class="nav-links">
-      <li @click="scrollToSection('work-introduction')" class="nav-item">作品介紹</li>
-      <li>畢籌組資訊</li>
-      <li @click="scrollToSection('promotional-video')" class="nav-item">宣傳片</li>
-      <li>周邊</li>
+      <li @click="scrollToSection('about-us')" class="nav-item">關於我們</li>
+      <li @click="scrollToSection('pricing')" class="nav-item">方案內容</li>
+      <li class="nav-item">作品參考</li>
+      <li class="nav-item">客戶回饋</li>
+      <li class="nav-item">拍攝預約點我</li>
     </ul>
   </nav>
 </template>
@@ -52,9 +53,21 @@ const scrollToSection = (id) => {
   z-index: 1000; /* 確保它在影片之上 */
 }
 
+.nav-item {
+  cursor: pointer; /* 讓滑鼠移上去變成手指圖示 */
+  transition: opacity 0.3s;
+}
+
 .nav-links {
   display: flex;
   list-style: none;
   gap: 30px; /* 選單之間的距離 */
+}
+
+.logo img {
+  height: 45px;    /* 調整高度，寬度會自動等比例縮放 */
+  width: auto;     /* 確保比例不變形 */
+  display: block;  /* 移除圖片下方微小的間隙 */
+  object-fit: contain; /* 確保圖片在容器內完整顯示 */
 }
 </style>

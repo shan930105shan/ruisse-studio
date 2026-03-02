@@ -1,111 +1,59 @@
-<template>
-  <main class="pt-[80px] bg-white min-h-screen">
-    
-    <section class="w-full flex justify-center items-center py-[40px]">
-      <div class="w-[90%] max-w-[1400px]">
-        <video autoplay muted loop playsinline class="w-full h-auto block">
-          <source src="@/assets/hero-video.mp4" type="video/mp4" />
-        </video>
-      </div>
-    </section>
-
-    <section class="w-full overflow-hidden border-t border-black py-[25px] bg-white group">
-      <div class="flex w-max animate-[scroll-left_40s_linear_infinite] group-hover:[animation-play-state:paused]">
-        <div class="flex items-center" v-for="i in 2" :key="i">
-          <div class="flex items-center px-[40px] whitespace-nowrap">
-            <span class="font-[800] text-[1.2rem] mr-[15px]">校內展 Campus Exhibition</span>
-            <span class="font-[600] text-[1.5rem]">05.01</span>
-            <img src="@/assets/plane.png" class="h-[24px] mx-[10px]" />
-            <span class="font-[600] text-[1.5rem]">05.04</span>
-            <span class="font-[500] text-[1rem] ml-[10px] text-[#333]">北科藝文中心</span>
-          </div>
-
-          <div class="flex items-center px-[40px] whitespace-nowrap">
-            <span class="font-[800] text-[1.2rem] mr-[15px]">新一代設計展 YODEX</span>
-            <span class="font-[600] text-[1.5rem]">05.22</span>
-            <img src="@/assets/plane.png" class="h-[24px] mx-[10px]" />
-            <span class="font-[600] text-[1.5rem]">05.25</span>
-            <span class="font-[500] text-[1rem] ml-[10px] text-[#333]">南港展覽館二館</span>
-          </div>
-
-          <div class="flex items-center px-[40px] whitespace-nowrap">
-            <span class="font-[800] text-[1.2rem] mr-[15px]">放視大賞 Vision Get Wild</span>
-            <span class="font-[600] text-[1.5rem]">05.28</span>
-            <img src="@/assets/plane.png" class="h-[24px] mx-[10px]" />
-            <span class="font-[600] text-[1.5rem]">05.30</span>
-            <span class="font-[500] text-[1rem] ml-[10px] text-[#333]">高雄展覽館南館</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="w-full py-[100px] px-[5%] flex justify-center bg-white">
-      <div class="max-w-[1200px] w-full flex flex-col md:flex-row items-center gap-[60px]">
-        <div class="flex-1 text-left">
-          <h2 class="text-[2rem] font-[800] mb-[30px] leading-[1.4]">“ 吐出我們不懼破格的無限延續創造力 ”</h2>
-          <div class="text-[1rem] leading-[1.8] text-[#333] tracking-[0.05rem]">
-            <p class="mb-[20px]">在網站設計上，我們將「破圖」的精神融入視覺互動：部分關鍵圖像將以 3D 方式呈現，並結合滑鼠互動。體驗者在瀏覽時，這些元素將搭配「破圖」動畫變化，讓您直觀地感受到打破僵固界限展現的創造力。</p>
-            <p>本畢業製作網頁採用一頁式設計，旨在提供連貫沉浸的體驗。當體驗者平滑滾動時，即是參與創作產出的探索旅程。各組作品資訊將配合流暢動畫呈現在網站中；而每一次點擊，都將如爆破般的能量釋放。</p>
-          </div>
-        </div>
-
-        <div class="flex-1 mt-10 md:mt-0">
-          <RotatingArrow :src="arrowImg" className="w-full max-w-[500px] h-auto" />
-        </div>
-      </div>
-    </section>
-
-    <section class="w-full py-[60px] pb-[100px] flex justify-center bg-white">
-      <div class="w-[90%] max-w-[1400px] aspect-[16/9] md:aspect-[21/4] overflow-hidden bg-black">
-        <video autoplay muted loop playsinline class="w-full h-full object-cover">
-          <source src="@/assets/promo-video.mp4" type="video/mp4" />
-        </video>
-      </div>
-    </section>
-
-    <WorkScrollSection :works="workList" id="work-introduction" />
-
-    <section class="w-full py-[100px] px-[5%] bg-white border-t border-black">
-      <div class="max-w-[1200px] mx-auto w-full">
-        <div class="flex items-center gap-5 mb-12">
-          <span class="text-[2.5rem]">→</span>
-          <h2 class="text-[2rem] font-[800]" id="promotional-video">宣傳片</h2>
-        </div>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
-          <div class="h-32 flex items-center justify-center border border-dashed border-gray-300 text-gray-400">
-            Coming Soon
-          </div>
-          <div class="h-32 flex items-center justify-center border border-dashed border-gray-300 text-gray-400">
-            Coming Soon
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-</template>
-
-<script setup>
-import WorkScrollSection from '@/components/WorkScrollSection.vue';
-import RotatingArrow from '@/components/RotatingArrow.vue';
-import arrowImg from '@/assets/rrrr-logo-graffiti.png'; // 引入圖片路徑
-
-// 作品資料
-const workList = [
-  { title: 'C 計劃', fullDesc: '這裡填入關於 C 計劃的詳細介紹內容...', img: '/src/assets/work1.jpg' },
-  { title: 'RE:ARM', fullDesc: '這裡填入關於 RE:ARM 的詳細介紹內容...', img: '/src/assets/work2.jpg' },
-  { title: '審判之手', fullDesc: '這裡填入關於 審判之手 的詳細介紹內容...', img: '/src/assets/work3.jpg' },
-  { title: '警戒深宵', fullDesc: '這裡填入關於 警戒深宵 的詳細介紹內容...', img: '/src/assets/work4.jpg' },
-  { title: '晶簇韻律', fullDesc: '這裡填入關於 晶簇韻律 的詳細介紹內容...', img: '/src/assets/work5.jpg' },
-  { title: 'Dionysus', fullDesc: '這裡填入關於 Dionysus 的詳細介紹內容...', img: '/src/assets/work7.jpg' },
-];
+<script setup lang="ts">
+// 注意：Navbar 建議放在 App.vue 以保持固定，若放這須確保 Navbar 內部有 fixed 定義
+import Navbar from '../components/Navbar.vue'
+import Typewriter from '@/components/Typewriter.vue';
+import PricingScroll from '@/components/PricingScroll.vue'; // 引入新組件
 </script>
 
-<style>
-/* 跑馬燈動畫仍需保留在全域或此處，Tailwind config 亦可設定 */
-@keyframes scroll-left {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+<template>
+  <div class="min-h-screen bg-[#002B40] font-serif">
+    
+    <Navbar />
+
+    <section id="hero" class="h-screen flex flex-col mt-10 items-center justify-center px-4 overflow-hidden">
+      
+      <div class="w-48 md:w-64 mb-10">
+        <img src="@/assets/images/logo-white.png" alt="RUISSE Logo" class="w-full opacity-95" />
+      </div>
+
+      <h1 class="text-white text-4xl md:text-6xl tracking-[0.8em] md:tracking-[1.0em] font-light ml-[1.2em] md:ml-[1.5em] mb-12 whitespace-nowrap">
+        RUISSE STUDIO
+      </h1>
+
+      <div class="text-gray-300 space-y-6 tracking-[0.5em] md:tracking-[0.8em] ml-[0.5em] md:ml-[0.8em] text-center">
+        <p class="text-base md:text-lg min-h-[1.5em]">
+          <Typewriter :words="['影像，讓生活更不一樣，捕捉瞬息萬變的美好']" />
+        </p>
+        <p class="text-xs md:text-sm opacity-70">
+          歡迎一同和我們創作屬於你的新篇章
+        </p>
+      </div>
+
+      <div class="text-gray-500 text-[10px] md:text-xs py-10 tracking-widest uppercase text-center">
+      Welcome to join us in creating your new chapter.
+    </div>
+
+    </section>
+
+    <section id="pricing">
+      <PricingScroll />
+    </section>
+
+    <footer class="bg-[#f2eedc] text-gray-500 text-[10px] md:text-xs py-10 tracking-widest uppercase text-center">
+      © RUISSE STUDIO ALL RIGHTS RESERVED.
+    </footer>
+    
+  </div>
+</template>
+
+<style scoped>
+/* 進場漸顯動畫 */
+.animate-fade-in {
+  animation: fadeIn 2s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>

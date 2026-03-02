@@ -1,17 +1,11 @@
-<script setup>
-import AppNavbar from './components/AppNavbar.vue' // 引入你的導覽列零件
+<script setup lang="ts">
+import Navbar from './components/Navbar.vue';
+import HomePage from './views/HomeView.vue'; // 確認路徑是否正確
 </script>
 
 <template>
-  <AppNavbar />
-
-  <RouterView />
+  <div class="relative w-full min-h-screen">
+    <Navbar />
+    <HomePage />
+  </div>
 </template>
-
-<style>
-/* 這裡可以放全域樣式，例如把 body 的 margin 清空 */
-body {
-  margin: 0;
-  background-color: white;
-}
-</style>
