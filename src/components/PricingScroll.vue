@@ -46,6 +46,19 @@ const containerRef = ref<HTMLElement | null>(null);
 const horizontalRef = ref<HTMLElement | null>(null);
 const translateX = ref(0);
 
+// --- 拖拉相關狀態 ---
+const isDragging = ref(false);
+const startX = ref(0);
+const scrollLeftStart = ref(0);
+
+// 計算最大位移限制
+const getMaxMove = () => {
+  if (!horizontalRef.value) return 0;
+  const windowWidth = window.innerWidth;
+  const contentWidth = horizontalRef.value.scrollWidth;
+  return Math.max(0, contentWidth - windowWidth + (windowWidth * 0.1));
+};
+
 const handleScroll = () => {
   if (!containerRef.value || !horizontalRef.value) return;
 
@@ -64,43 +77,86 @@ const handleScroll = () => {
   translateX.value = constrainedProgress * maxMove;
 };
 
-onMounted(() => window.addEventListener('scroll', handleScroll));
-onUnmounted(() => window.removeEventListener('scroll', handleScroll));
+// 2. 拖拉邏輯
+const startDragging = (e: MouseEvent) => {
+  isDragging.value = true;
+  startX.value = e.pageX;
+  scrollLeftStart.value = translateX.value;
+  // 增加抓取視覺感
+  if (horizontalRef.value) horizontalRef.value.style.cursor = 'grabbing';
+};
+
+const stopDragging = () => {
+  isDragging.value = false;
+  if (horizontalRef.value) horizontalRef.value.style.cursor = 'grab';
+};
+
+const onDragging = (e: MouseEvent) => {
+  if (!isDragging.value) return;
+  e.preventDefault();
+  
+  const x = e.pageX;
+  const walk = (startX.value - x) * 1.5; // 1.5 是靈敏度
+  let newTranslate = scrollLeftStart.value + walk;
+  
+  // 邊界限制
+  const max = getMaxMove();
+  translateX.value = Math.max(0, Math.min(max, newTranslate));
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+  window.addEventListener('mouseup', stopDragging); // 全域放開，防止卡死
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+  window.removeEventListener('mouseup', stopDragging);
+});
 </script>
 
 <template>
   <section ref="containerRef" class="relative h-[300vh] bg-[#f2eedc]">
     
-    <div class="sticky top-0 h-screen w-full flex items-center overflow-hidden">
-      
-      <div class="w-[25%] md:w-[20%] px-8 md:px-12 h-full flex items-center justify-center z-20 bg-[#f2eedc]">
-        <h2 class="text-3xl md:text-4xl font-black tracking-[0.5em] leading-relaxed text-black writing-vertical">
-          案容<br>方內
-        </h2>
+    <div class="sticky top-0 min-h-screen w-full flex flex-col overflow-hidden">
+
+  <div 
+    ref="horizontalRef"
+    class="flex space-x-12 px-12 mt-12 transition-transform duration-75 ease-out"
+    @mousedown="startDragging" 
+    @mousemove="onDragging"
+    @mouseleave="stopDragging"
+    :style="{ transform: `translateX(-${translateX}px)` }" 
+  >
+    <div v-for="(plan, i) in plans" :key="i" class="flex-shrink-0 w-[280px] md:w-[350px]">
+
+      <div class="h-[450px] w-auto overflow-hidden border border-gray-300 shadow-lg mb-8 bg-white group">
+        <img 
+          :src="plan.img" 
+          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+        />
       </div>
 
-      <div 
-        ref="horizontalRef"
-        class="flex space-x-12 px-12 transition-transform duration-75 ease-out"
-        :style="{ transform: `translateX(-${translateX}px)` }" 
-      >
-        <div v-for="(plan, i) in plans" :key="i" class="flex-shrink-0 w-[300px] md:w-[400px]">
-          <div class="aspect-[3/4] overflow-hidden border border-gray-300 shadow-md mb-6 bg-white">
-            <img :src="plan.img" class="w-full h-full object-cover" />
-          </div>
-          <div class="text-black">
-            <div class="flex items-baseline space-x-2 mb-2">
-              <h3 class="text-xl font-bold">{{ plan.title }}</h3>
-              <span class="text-gray-400 text-sm ml-auto">{{ plan.price }}</span>
-            </div>
-            <ul class="text-sm space-y-2 text-gray-700 border-t border-gray-300 pt-4">
-              <li v-for="f in plan.features" :key="f" class="flex items-start">
-                 <span class="mr-2">•</span> {{ f }}
-              </li>
-            </ul>
-          </div>
+      <div class="text-black px-2">
+        <div class="flex items-baseline justify-between space-y-2 mb-4">
+          <h3 class="text-2xl md:text-3xl font-black tracking-wider">
+            {{ plan.title }}
+          </h3>
+          
+          <span class="text-gray-500 text-lg md:text-xl text-right font-medium font-mono">
+            {{ plan.price }}
+          </span>
         </div>
+
+        <ul class="text-base md:text-lg space-y-3 text-gray-700 border-t border-gray-300 pt-6">
+          <li v-for="f in plan.features" :key="f" class="flex items-start">
+            <span class="mr-3 text-gray-400">•</span> {{ f }}
+          </li>
+        </ul>
       </div>
+
+    </div>
+  </div>
 
     </div>
   </section>

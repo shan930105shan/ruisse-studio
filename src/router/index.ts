@@ -14,8 +14,17 @@ const router = createRouter({
       name: 'about',
       // 使用延遲加載提高性能
       component: () => import('../views/AboutUs.vue')
+    },
+    {
+      path: '/work/outdoor',
+      name: 'OutdoorGallery',
+      component: () => import('../views/OutdoorGallery.vue')
     }
-  ]
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    // 始終捲動到頂部
+    return { top: 0 }
+  },
 })
 
 export default router

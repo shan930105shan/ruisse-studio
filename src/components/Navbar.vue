@@ -1,52 +1,131 @@
 <template>
   <nav class="navbar">
-    <div class="logo" @click="scrollToSection('hero')" style="cursor: pointer;">
+    <div class="logo" @click="goToHome" style="cursor: pointer;">
       <img src="@/assets/images/logo-dark.png" alt="Logo" />
     </div>
-    <ul class="nav-links">
-      <li @click="goToHome" class="cursor-pointer hover:opacity-50 transition-opacity">
-    首頁
-  </li>
-      <li @click="goToAbout" class="cursor-pointer hover:opacity-50 transition-opacity">
-    關於我們
-  </li>
+
+    <ul class="nav-links hidden md:flex">
+      <li @click="goToHome" class="nav-item">首頁</li>
+      <li @click="goToAbout" class="nav-item">關於我們</li>
+      
+      <li class="relative group nav-item">
+        <span class="flex items-center gap-1">作品參考 <i class="fa-solid fa-chevron-down text-xs"></i></span>
+        <ul class="absolute top-full left-0 bg-[#f2eedc] shadow-xl py-4 w-48 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-300 border-t-2 border-[#002B40]">
+          <li v-for="work in workTypes" :key="work" @click="handleWorkClick(work)" class="px-6 py-2 hover:bg-[#002B40] hover:text-white transition-colors text-sm">
+            {{ work }}
+          </li>
+        </ul>
+      </li>
+
       <li @click="scrollToSection('pricing')" class="nav-item">方案內容</li>
-      <li @click="scrollToSection('work')" class="nav-item">作品參考</li>
-      <li class="nav-item">客戶回饋</li>
-      <li @click="scrollToSection('contact')" class="nav-item">拍攝預約點我</li>
+      <a 
+        href="https://lin.ee/miyCTjD" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="cursor-pointer hover:opacity-70 transition-opacity"
+        @click="isMenuOpen = false"
+      >
+        拍攝預約點我
+      </a>
     </ul>
+
+    <div class="md:hidden flex items-center cursor-pointer z-[1001]" @click="isMobileMenuOpen = !isMobileMenuOpen">
+      <i :class="[
+        'fa-solid', 
+        isMobileMenuOpen ? 'fa-xmark' : 'fa-bars', 
+        'text-2xl text-[#002B40]'
+      ]"></i>
+    </div>
+
+    <transition name="fade">
+      <div v-if="isMobileMenuOpen" class="fixed inset-0 bg-[#f2eedc] z-[999] flex flex-col items-center justify-center space-y-8 text-xl font-serif">
+        <div @click="closeAndNavigate(goToHome)" class="cursor-pointer">首頁</div>
+        <div @click="closeAndNavigate(goToAbout)" class="cursor-pointer">關於我們</div>
+        
+        <div class="text-center">
+          <div @click="isWorkSubMenuOpen = !isWorkSubMenuOpen" class="flex items-center justify-center gap-2 cursor-pointer">
+            作品參考 
+            <i :class="['fa-solid', isWorkSubMenuOpen ? 'fa-chevron-up' : 'fa-chevron-down', 'text-sm']"></i>
+          </div>
+          <transition name="fade">
+            <div v-if="isWorkSubMenuOpen" class="mt-4 space-y-4 bg-[#002B40]/5 py-4 px-12 rounded-lg">
+              <div v-for="work in workTypes" :key="work" @click="handleWorkClick(work)" class="text-base opacity-70 cursor-pointer">
+                {{ work }}
+              </div>
+            </div>
+          </transition>
+        </div>
+
+        <div @click="closeAndNavigate(() => scrollToSection('pricing'))" class="cursor-pointer">方案內容</div>
+        <a 
+          href="https://lin.ee/miyCTjD" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="cursor-pointer hover:opacity-70 transition-opacity"
+          @click="isMenuOpen = false"
+        >
+          拍攝預約點我
+        </a>
+      </div>
+    </transition>
   </nav>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+
 const router = useRouter()
+const isMobileMenuOpen = ref(false)
+const isWorkSubMenuOpen = ref(false)
 
-const goToHome = () => {
-  router.push('/') // 跳轉到關於我們頁面
-}
+const workTypes = [
+  '外景寫真', '形象模卡', '輕盈寫真', 
+  '精緻寫真', '生日寫真', '客製化寫真'
+]
 
+const goToHome = () => router.push('/')
 const goToAbout = () => {
-  router.push('/about') // 跳轉到關於我們頁面
+  router.push('/about')
+  isMobileMenuOpen.value = false
 }
-const scrollToSection = (id) => {
-  if (id === 'top') {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
-  }
 
+const handleWorkClick = (type) => {
+  console.log('跳轉至作品類別:', type)
+  if (type === '外景寫真') {
+    router.push('/work/outdoor') // 跳轉到剛才設定的門牌號碼
+  } else {
+    // 其他類型可以先放著，或跳轉到通用作品頁
+    console.log('準備開發中:', type)
+  }
+  isMobileMenuOpen.value = false
+}
+
+const closeAndNavigate = (fn) => {
+  fn()
+  isMobileMenuOpen.value = false
+}
+
+const scrollToSection = (id) => {
+  // 如果不在首頁，先跳回首頁再捲動
+  if (router.currentRoute.value.path !== '/') {
+    router.push('/').then(() => {
+      setTimeout(() => performScroll(id), 300)
+    })
+  } else {
+    performScroll(id)
+  }
+}
+
+const performScroll = (id) => {
   const element = document.getElementById(id);
   if (element) {
-    // 取得目標元素位置
-    const offset = 80; // 這裡是你的 Navbar 高度
+    const offset = 80;
     const bodyRect = document.body.getBoundingClientRect().top;
     const elementRect = element.getBoundingClientRect().top;
     const elementPosition = elementRect - bodyRect;
-    const offsetPosition = elementPosition - offset;
-
-    // 平滑捲動
     window.scrollTo({
-      top: offsetPosition,
+      top: elementPosition - offset,
       behavior: 'smooth'
     });
   }
@@ -55,34 +134,52 @@ const scrollToSection = (id) => {
 
 <style scoped>
 .navbar {
-  position: fixed; /* 固定在最上方 */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 80px; /* 根據設計稿高度調整 */
+  height: 80px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 50px;
-  background-color: #f2eedc; /* 確保背景是不透明的白色 */
-  z-index: 1000; /* 確保它在影片之上 */
+  background-color: #f2eedc;
+  z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 20px; /* 手機版縮減左右間距 */
+  }
+}
+
+/* 桌機版列表樣式 */
+.nav-links {
+  list-style: none;
+  gap: 30px;
 }
 
 .nav-item {
-  cursor: pointer; /* 讓滑鼠移上去變成手指圖示 */
-  transition: opacity 0.3s;
-}
-
-.nav-links {
-  display: flex;
-  list-style: none;
-  gap: 30px; /* 選單之間的距離 */
+  @apply cursor-pointer hover:opacity-50 transition-opacity;
 }
 
 .logo img {
-  height: 45px;    /* 調整高度，寬度會自動等比例縮放 */
-  width: auto;     /* 確保比例不變形 */
-  display: block;  /* 移除圖片下方微小的間隙 */
-  object-fit: contain; /* 確保圖片在容器內完整顯示 */
+  height: 45px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* 動畫設定 */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+/* 確保下拉選單滑過時顯示 */
+.group:hover ul {
+  display: block;
 }
 </style>

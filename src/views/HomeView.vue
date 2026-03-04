@@ -13,11 +13,7 @@ import ContactUs from '@/components/ContactUs.vue';
     
     <Navbar />
 
-    <section id="hero" class="h-screen flex flex-col mt-10 items-center justify-center px-4 overflow-hidden">
-      
-      <div class="w-48 md:w-64 mb-10">
-        <img src="@/assets/images/logo-white.png" alt="RUISSE Logo" class="w-full opacity-95" />
-      </div>
+    <section id="hero" class="h-screen flex flex-col mt-0 items-center justify-start pt-60 md:pt-75 px-4 overflow-hidden">
 
       <h1 class="text-white text-4xl md:text-6xl tracking-[0.8em] md:tracking-[1.0em] font-light ml-[1.2em] md:ml-[1.5em] mb-12 whitespace-nowrap">
         RUISSE STUDIO
@@ -38,7 +34,16 @@ import ContactUs from '@/components/ContactUs.vue';
 
     </section>
 
-    <section id="pricing">
+    <section id="pricing" class="min-h-screen">
+      <div class="w-full pt-16 pb-12 z-20 bg-[#f2eedc] flex flex-col items-center">
+        <h2 class="text-3xl md:text-5xl font-black tracking-[0.5em] text-black ml-[0.5em]">
+          方案內容
+        </h2>
+        
+        <p class="text-gray-400 text-xs md:text-sm tracking-[0.3em] uppercase mt-4 font-light">
+          Service Packages & Pricing
+        </p>
+      </div>
       <PricingScroll />
     </section>
 

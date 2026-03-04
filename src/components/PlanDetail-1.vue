@@ -6,6 +6,13 @@ import plan1_3 from '@/assets/images/outdoor-photography/plan1_3.png'
 import plan1_4 from '@/assets/images/outdoor-photography/plan1_4.png'
 import plan1_5 from '@/assets/images/outdoor-photography/plan1_5.png'
 import plan1_6 from '@/assets/images/outdoor-photography/plan1_6.png'
+
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const goToGallery = () => {
+  router.push('/work/outdoor'); // 確保你在 router/index.ts 有定義這個路徑
+};
 </script>
 
 <template>
@@ -19,7 +26,7 @@ import plan1_6 from '@/assets/images/outdoor-photography/plan1_6.png'
           alt="主視覺"
         />
         
-        <div class="absolute inset-0 bg-[#002B40]/70 flex flex-col items-center justify-center text-white p-6 opacity-100 transition-opacity">
+        <div @click="goToGallery" class="absolute inset-0 bg-[#002B40]/70 flex flex-col items-center justify-center text-white p-6 opacity-100 transition-opacity">
           <h2 class="text-2xl md:text-3xl tracking-[0.4em] font-light border-b border-white/30 pb-4 mb-4">
             外景寫真
           </h2>
