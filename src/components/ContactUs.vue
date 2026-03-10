@@ -19,7 +19,7 @@
         </div>
 
         <a 
-          href="#" 
+          href="https://lin.ee/miyCTjD" 
           class="inline-block bg-[#D9D9D9] text-[#002B40] px-10 py-4 rounded-full text-lg tracking-[0.2em] hover:bg-white transition-colors duration-300 shadow-lg"
         >
           填寫預約表單
