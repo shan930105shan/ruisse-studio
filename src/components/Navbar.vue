@@ -96,7 +96,23 @@ const handleWorkClick = (type) => {
   console.log('跳轉至作品類別:', type)
   if (type === '外景寫真') {
     router.push('/work/outdoor') // 跳轉到剛才設定的門牌號碼
-  } else {
+  } 
+  else if (type === '形象模卡') {
+    router.push('/work/modelcard') // 跳轉到剛才設定的門牌號碼
+  }
+  else if (type === '輕盈寫真') {
+    router.push('/work/light') // 跳轉到新頁面
+  }
+  else if (type === '精緻寫真') {
+    router.push('/work/exquisite')
+  }
+  else if (type === '生日寫真') {
+    router.push('/work/birthday') // 確保與 router 設定的路徑一致
+  }
+  else if (type === '客製化寫真') {
+    router.push('/work/customized')
+  }
+  else {
     // 其他類型可以先放著，或跳轉到通用作品頁
     console.log('準備開發中:', type)
   }

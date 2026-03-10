@@ -2,25 +2,25 @@
   {
     "id": 1,
     "name": "拍攝主題/客人稱呼",
-    "avatar": "/images/avatars/client1.png",
+    "avatar": "client1.png",
     "feedback": "回饋內容文字，建議長度保持一致以維持排版美觀。這裡可以放一些關於拍攝過程的讚美。"
   },
   {
     "id": 2,
     "name": "拍攝主題/客人稱呼",
-    "avatar": "/images/avatars/client2.png",
+    "avatar": "client2.png",
     "feedback": "非常專業的拍攝體驗，燈光與氛圍抓得很到位，下次還會想再來預約。"
   },
   {
     "id": 3,
     "name": "拍攝主題/客人稱呼",
-    "avatar": "/images/avatars/client3.png",
+    "avatar": "client3.png",
     "feedback": "修圖非常自然，保留了個人特色又提升了整體的質感，真的很推薦！"
   },
   {
     "id": 4,
     "name": "拍攝主題/客人稱呼",
-    "avatar": "/images/avatars/client4.png",
+    "avatar": "client4.png",
     "feedback": "溝通非常順暢，能精準捕捉到品牌需要的氛圍，合作過程非常愉快。"
   }
 ]

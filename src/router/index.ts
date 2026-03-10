@@ -20,6 +20,31 @@ const router = createRouter({
       name: 'OutdoorGallery',
       component: () => import('../views/OutdoorGallery.vue')
     },
+    {
+      path: '/work/modelcard',
+      name: 'ModelCard',
+      component: () => import('../views/ModelCard.vue')
+    },
+    {
+      path: '/work/light',
+      name: 'LightPortfolio',
+      component: () => import('../views/LightPortfolio.vue')
+    },
+    {
+      path: '/work/exquisite',
+      name: 'Exquisite',
+      component: () => import('../views/Exquisite.vue')
+    },
+    {
+      path: '/work/birthday',
+      name: 'Birthday',
+      component: () => import('../views/Birthday.vue')
+    },
+    {
+      path: '/work/customized',
+      name: 'Customized',
+      component: () => import('../views/Customized.vue')
+    },
     { 
       path: '/testimonials', 
       name: 'testimonials', 

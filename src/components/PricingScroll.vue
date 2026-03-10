@@ -9,12 +9,12 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 
 const plans = [
-  { title: '外景寫真', price: '2990$-4990$', img: new URL('../assets/images/shooting-plan/plan1.png', import.meta.url).href, features: ['2小時拍攝', '10張精修圖', '單人.雙人.多人'] },
-  { title: '形象模卡', price: '2690$', img: new URL('../assets/images/shooting-plan/plan2.png', import.meta.url).href, features: ['2小時拍攝（含妝容）', '6張精修圖'] },
-  { title: '輕盈寫真', price: '2990$', img: new URL('../assets/images/shooting-plan/plan3.png', import.meta.url).href, features: ['2小時拍攝', '6張精修圖', '提供簡約白洋裝'] },
-  { title: '精緻寫真', price: '4990$', img: new URL('../assets/images/shooting-plan/plan4.png', import.meta.url).href, features: ['2.5小時拍攝', '8張精修圖', '電影感實景'] },
-  { title: '生日寫真', price: '5990$', img: new URL('../assets/images/shooting-plan/plan5.png', import.meta.url).href, features: ['2.5小時拍攝', '8張精修圖', '生日造景'] },
-  { title: '客製化寫真', price: '1990$UP', img: new URL('../assets/images/shooting-plan/plan6.png', import.meta.url).href, features: ['2小時拍攝', '8張精修圖', '客製化佈置'] }
+  { title: '外景寫真', price: '2990$-4990$', img: new URL('../assets/images/shooting-plan/plan-outdoor.jpg', import.meta.url).href, features: ['2小時拍攝', '10張精修圖', '單人.雙人.多人'] },
+  { title: '形象模卡', price: '2690$', img: new URL('../assets/images/shooting-plan/plan-modelcard.jpg', import.meta.url).href, features: ['2小時拍攝（含妝容）', '6張精修圖'] },
+  { title: '輕盈寫真', price: '2990$', img: new URL('../assets/images/shooting-plan/plan-lightweight.jpg', import.meta.url).href, features: ['2小時拍攝', '6張精修圖', '提供簡約白洋裝'] },
+  { title: '精緻寫真', price: '4990$', img: new URL('../assets/images/shooting-plan/plan-exquisite.jpg', import.meta.url).href, features: ['2.5小時拍攝', '8張精修圖', '電影感實景'] },
+  { title: '生日寫真', price: '5990$', img: new URL('../assets/images/shooting-plan/plan-birthday.jpg', import.meta.url).href, features: ['2.5小時拍攝', '8張精修圖', '生日造景'] },
+  { title: '客製化寫真', price: '1990$UP', img: new URL('../assets/images/shooting-plan/plan-customized.jpg', import.meta.url).href, features: ['2小時拍攝', '8張精修圖', '客製化佈置'] }
 ];
 
 const swiperInstance = ref<any>(null);

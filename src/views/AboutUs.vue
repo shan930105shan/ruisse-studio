@@ -1,7 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import Navbar from '@/components/Navbar.vue'
 import ContactUs from '@/components/ContactUs.vue'
-import aboutImg from '@/assets/images/team.png'
+// 引入 JSON
+import reelsData from '@/data/aboutReels.json';
+
+// 動態圖片處理邏輯
+const getImageUrl = (name: string) => {
+  // 假設圖片放在 src/assets/images/about/
+  return new URL(`../assets/images/about/${name}`, import.meta.url).href;
+};
 </script>
 
 <template>
@@ -93,44 +100,20 @@ import aboutImg from '@/assets/images/team.png'
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
     
     <a 
-        href="https://www.instagram.com/reel/DG5irzKBZ-b/" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        class="aspect-[9/16] block overflow-hidden border border-gray-200 shadow-sm bg-white group cursor-pointer"
-        >
-    <img 
-        src="../assets/images/about/reels-01.jpg" 
-        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-        alt="Reels1"
-    />
-    </a>
-
-    <a 
-        href="https://www.instagram.com/reel/DIJX_GrB1Ki/" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        class="aspect-[9/16] block overflow-hidden border border-gray-200 shadow-sm bg-white group cursor-pointer"
-        >
+      v-for="reel in reelsData" 
+      :key="reel.id"
+      :href="reel.url" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      class="aspect-[9/16] block overflow-hidden border border-gray-200 shadow-sm bg-white group cursor-pointer"
+    >
       <img 
-        src="../assets/images/about/reels-02.jpg" 
-        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-        alt="Reels2"
+        :src="getImageUrl(reel.image)" 
+        :class="['w-full h-full object-cover transition-transform duration-700 group-hover:scale-105']" 
+        :alt="reel.alt"
+        loading="lazy"
       />
     </a>
-
-    <a 
-        href="https://www.instagram.com/reel/DDjvLPrBbGr/" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        class="aspect-[9/16] block overflow-hidden border border-gray-200 shadow-sm bg-white group cursor-pointer"
-        >
-      <img 
-        src="../assets/images/about/reels-03.jpg" 
-        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-        alt="Reels3"
-      />
-    </a>
-
 
   </div>
 </div>

@@ -1,10 +1,15 @@
 <script setup lang="ts">
 // 注意：Navbar 建議放在 App.vue 以保持固定，若放這須確保 Navbar 內部有 fixed 定義
+import { defineAsyncComponent } from 'vue' // 引入異步定義工具
 import Navbar from '../components/Navbar.vue'
 import Typewriter from '@/components/Typewriter.vue';
 import PricingScroll from '@/components/PricingScroll.vue'; // 引入新組件
-import PlanDetail1 from '@/components/PlanDetail-1.vue'; // 引入新組件
-import PlanDetail2 from '@/components/PlanDetail-2.vue'; // 引入新組件
+const PlanDetail1 = defineAsyncComponent(() => import('@/components/PlanDetail-1.vue'))
+const PlanDetail2 = defineAsyncComponent(() => import('@/components/PlanDetail-2.vue'))
+const PlanDetail3 = defineAsyncComponent(() => import('@/components/PlanDetail-3.vue'))
+const PlanDetail4 = defineAsyncComponent(() => import('@/components/PlanDetail-4.vue'))
+const PlanDetail5 = defineAsyncComponent(() => import('@/components/PlanDetail-5.vue'))
+const PlanDetail6 = defineAsyncComponent(() => import('@/components/PlanDetail-6.vue'))
 import ContactUs from '@/components/ContactUs.vue';
 
 const services = [
@@ -70,10 +75,10 @@ const services = [
     <section id="work">
       <PlanDetail1 />
       <PlanDetail2 />
-      <PlanDetail1 />
-      <PlanDetail2 />
-      <PlanDetail1 />
-      <PlanDetail2 />
+      <PlanDetail3 />
+      <PlanDetail4 />
+      <PlanDetail5 />
+      <PlanDetail6 />
     </section>
 
     <section id="contact">

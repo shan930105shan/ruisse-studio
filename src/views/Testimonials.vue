@@ -8,10 +8,10 @@ import 'swiper/css/free-mode';
 
 // 引入資料
 import testimonialData from '@/data/testimonials.json';
-const getImageUrl = (path: string) => {
-  // 如果妳 JSON 裡寫的是 "client1.png"
-  // 且圖片放在 src/assets/images/avatars/
-  return new URL(`../assets/images/avatars/${path}`, import.meta.url).href;
+const getImageUrl = (name: string) => {
+  // 確保路徑與妳的專案結構完全一致
+  // 這裡假設妳的檔案在 src/components 或 src/views 下
+  return new URL(`/src/assets/images/avatars/${name}`, import.meta.url).href;
 };
 </script>
 
@@ -47,28 +47,31 @@ const getImageUrl = (path: string) => {
         class="testimonial-swiper"
       >
         <swiper-slide 
-          v-for="item in testimonialData" 
-          :key="item.id" 
-          class="testimonial-slide"
-        >
-          <div class="flex flex-col items-center text-center px-4">
-            <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden mb-6 border-4 border-white shadow-sm transition-transform duration-500 hover:scale-105">
-              <img 
-                :src="getImageUrl(item.avatar)" 
-                :alt="item.name"
-                class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-              />
+            v-for="item in testimonialData" 
+            :key="item.id" 
+            class="testimonial-slide group" 
+            >
+            <div class="flex flex-col items-center text-center px-4">
+                <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden mb-6 border-4 border-[#002B40] shadow-sm relative">
+                
+                <img 
+                    :src="getImageUrl(item.avatar)" 
+                    :alt="item.name"
+                    class="w-full h-full object-cover"
+                />
+
+                <div class="absolute inset-0 bg-[#002B40]/60 transition-opacity duration-500 group-hover:opacity-0"></div>
+                
+                </div>
+
+                <h3 class="text-lg md:text-xl font-bold text-[#002B40] tracking-widest mb-3">
+                {{ item.name }}
+                </h3>
+                <p class="text-gray-600 text-sm md:text-base leading-relaxed tracking-wider max-w-[240px]">
+                {{ item.feedback }}
+                </p>
             </div>
-
-            <h3 class="text-lg md:text-xl font-bold text-[#002B40] tracking-widest mb-3">
-              {{ item.name }}
-            </h3>
-
-            <p class="text-gray-600 text-sm md:text-base leading-relaxed tracking-wider max-w-[240px]">
-              {{ item.feedback }}
-            </p>
-          </div>
-        </swiper-slide>
+            </swiper-slide>
       </swiper>
 
     </div>
