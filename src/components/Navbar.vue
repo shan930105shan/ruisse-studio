@@ -18,6 +18,7 @@
       </li>
 
       <li @click="scrollToSection('pricing')" class="nav-item">方案內容</li>
+      <li @click="goToTestimonials" class="nav-item">客戶回饋</li>
       <a 
         href="https://lin.ee/miyCTjD" 
         target="_blank" 
@@ -57,6 +58,7 @@
         </div>
 
         <div @click="closeAndNavigate(() => scrollToSection('pricing'))" class="cursor-pointer">方案內容</div>
+        <div @click="closeAndNavigate(goToTestimonials)" class="cursor-pointer">客戶回饋</div>
         <a 
           href="https://lin.ee/miyCTjD" 
           target="_blank" 
@@ -100,6 +102,10 @@ const handleWorkClick = (type) => {
   }
   isMobileMenuOpen.value = false
 }
+
+const goToTestimonials = () => {
+  router.push('/testimonials');
+};
 
 const closeAndNavigate = (fn) => {
   fn()

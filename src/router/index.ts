@@ -19,6 +19,11 @@ const router = createRouter({
       path: '/work/outdoor',
       name: 'OutdoorGallery',
       component: () => import('../views/OutdoorGallery.vue')
+    },
+    { 
+      path: '/testimonials', 
+      name: 'testimonials', 
+      component: () => import('../views/Testimonials.vue')
     }
   ],
   scrollBehavior(to, from, savedPosition) {
