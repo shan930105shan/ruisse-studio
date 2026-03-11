@@ -4,6 +4,8 @@ import { defineAsyncComponent } from 'vue' // 引入異步定義工具
 import Navbar from '../components/Navbar.vue'
 import Typewriter from '@/components/Typewriter.vue';
 import PricingScroll from '@/components/PricingScroll.vue'; // 引入新組件
+//視差滾動效果
+import { ref, onMounted, onUnmounted } from 'vue';
 const PlanDetail1 = defineAsyncComponent(() => import('@/components/PlanDetail-1.vue'))
 const PlanDetail2 = defineAsyncComponent(() => import('@/components/PlanDetail-2.vue'))
 const PlanDetail3 = defineAsyncComponent(() => import('@/components/PlanDetail-3.vue'))
@@ -20,6 +22,20 @@ const services = [
   { zh: '品牌形象影片', en: 'Brand image video' },
   { zh: '商業/個人IP短影音', en: 'Commercial/Personal IP Short Videos' }
 ]
+
+const scrollY = ref(0);
+
+const handleScroll = () => {
+  scrollY.value = window.scrollY;
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 </script>
 
 <template>
@@ -27,13 +43,19 @@ const services = [
     
     <Navbar />
 
-    <section id="hero" class="min-h-screen flex flex-col mt-0 items-center justify-between overflow-hidden">
+    <section id="hero" class="min-h-screen flex flex-col mt-0 items-center justify-between overflow-hidden relative bg-[#002B40]">
 
-      <h1 class="text-white text-4xl md:text-6xl tracking-[0.8em] pt-45 md:pt-60 md:tracking-[1.0em] font-light ml-[1.2em] md:ml-[1.5em] mb-12 whitespace-nowrap">
+      <h1 
+        class="text-white text-4xl md:text-6xl tracking-[0.8em] pt-45 md:pt-60 md:tracking-[1.0em] font-light ml-[1.2em] md:ml-[1.5em] mb-12 whitespace-nowrap transition-transform duration-75 ease-out"
+        :style="{ transform: `translateY(${scrollY * 0.4}px)` }"
+      >
         RUISSE STUDIO
       </h1>
 
-      <div class="text-gray-300 space-y-6 tracking-[0.5em] md:tracking-[0.8em] ml-[0.5em] md:ml-[0.8em] text-center">
+      <div 
+        class="text-gray-300 space-y-6 tracking-[0.5em] md:tracking-[0.8em] ml-[0.5em] md:ml-[0.8em] text-center transition-transform duration-75 ease-out"
+        :style="{ transform: `translateY(${scrollY * 0.5}px)` }"
+      >
         <p class="text-base md:text-lg min-h-[1.5em]">
           <Typewriter :words="['影像，讓生活更不一樣，捕捉瞬息萬變的美好']" />
         </p>
@@ -42,11 +64,14 @@ const services = [
         </p>
       </div>
 
-      <div class="text-gray-500 text-[10px] md:text-xs py-10 tracking-widest uppercase text-center">
-      Welcome to join us in creating your new chapter.
-    </div>
+      <div 
+        class="text-gray-500 text-[10px] md:text-xs py-10 tracking-widest uppercase text-center transition-transform duration-75 ease-out"
+        :style="{ transform: `translateY(${scrollY * 0.6}px)` }"
+      >
+        Welcome to join us in creating your new chapter.
+      </div>
 
-    <div class="w-full bg-[#f2eedc] py-6 md:py-8 border-y border-[#002B40]/5 overflow-hidden">
+      <div class="w-full bg-[#f2eedc] py-6 md:py-8 border-y border-[#002B40]/5 overflow-hidden z-20">
         <div class="flex whitespace-nowrap animate-marquee">
           <div v-for="i in 2" :key="i" class="flex items-center gap-12 md:gap-24 px-6 md:px-12">
             <div v-for="service in services" :key="service.zh" class="flex flex-col items-center">
@@ -124,4 +149,5 @@ const services = [
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
 </style>
