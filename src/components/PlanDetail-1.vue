@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-// 使用 import 方式引入圖片，Vite 會自動處理路徑解析與打包
+import { useRouter } from 'vue-router';
+// 引入圖片
 import plan1_1 from '@/assets/images/outdoor-photography/plan1_1.jpg'
 import plan1_2 from '@/assets/images/outdoor-photography/plan1_2.jpg'
 import plan1_3 from '@/assets/images/outdoor-photography/plan1_3.jpg'
@@ -8,30 +9,40 @@ import plan1_4 from '@/assets/images/outdoor-photography/plan1_4.jpg'
 import plan1_5 from '@/assets/images/outdoor-photography/plan1_5.jpg'
 import plan1_6 from '@/assets/images/outdoor-photography/plan1_6.jpg'
 
-import { useRouter } from 'vue-router';
-
 const router = useRouter();
-const sectionRef = ref<HTMLElement | null>(null); // 用來綁定 DOM
-const isVisible = ref(false); // 控制是否顯示動畫
+const sectionRef = ref<HTMLElement | null>(null);
+const isVisible = ref(false);
+
+// --- 輪播邏輯開始 ---
+const images = [plan1_1, plan1_2, plan1_3, plan1_4, plan1_5, plan1_6];
+const currentImageIndex = ref(0);
+let timer: number | null = null;
+
+const startCarousel = () => {
+  timer = window.setInterval(() => {
+    currentImageIndex.value = (currentImageIndex.value + 1) % images.length;
+  }, 1000); // 每 1 秒更換一張圖片
+};
+// --- 輪播邏輯結束 ---
 
 let observer: IntersectionObserver | null = null;
 
 onMounted(() => {
-      observer = new IntersectionObserver((entries) => {
-      // 使用 forEach 遍歷所有的觀察目標
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          isVisible.value = true;
-          // 觸發後停止觀察
-          if (sectionRef.value && observer) {
-            observer.unobserve(sectionRef.value);
-          }
+  startCarousel(); // 組件掛載後啟動輪播
+
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        isVisible.value = true;
+        if (sectionRef.value && observer) {
+          observer.unobserve(sectionRef.value);
         }
-      });
-    }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
+      }
     });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  });
 
   if (sectionRef.value) {
     observer.observe(sectionRef.value);
@@ -39,13 +50,13 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  observer?.disconnect(); // 組件銷毀時記得移除觀察器，避免記憶體洩漏
+  observer?.disconnect();
+  if (timer) clearInterval(timer); // 銷毀組件時清除定時器
 });
 
 const goToGallery = () => {
   router.push('/work/outdoor');
 };
-
 </script>
 
 <template>
@@ -55,8 +66,19 @@ const goToGallery = () => {
       <div class="col-span-4 row-span-8 overflow-hidden group relative">
         <div class="w-full h-full transition-all duration-1000 transform"
              :class="isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'">
-          <img :src="plan1_1" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="主視覺" loading="lazy" />
-          <div @click="goToGallery" class="absolute inset-0 bg-[#002B40]/70 flex flex-col items-center justify-center text-white p-6 cursor-pointer">
+          
+          <TransitionGroup name="fade-bg">
+            <img 
+              v-for="(img, index) in images" 
+              :key="img"
+              v-show="currentImageIndex === index"
+              :src="img" 
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+              alt="主視覺輪播" 
+            />
+          </TransitionGroup>
+
+          <div @click="goToGallery" class="absolute inset-0 bg-[#002B40]/60 flex flex-col items-center justify-center text-white p-6 cursor-pointer z-10 transition-colors group-hover:bg-[#002B40]/40">
             <h2 class="text-2xl md:text-3xl tracking-[0.4em] font-light border-b border-white/30 pb-4 mb-4">外景寫真</h2>
             <p class="text-xs tracking-widest opacity-80 uppercase">Outdoor Photography</p>
           </div>
@@ -148,5 +170,26 @@ img {
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
+}
+
+/* 輪播圖淡入淡出效果 */
+.fade-bg-enter-active,
+.fade-bg-leave-active {
+  transition: opacity 0.5s ease; /* 緩慢淡入淡出比較優雅 */
+}
+
+.fade-bg-enter-from,
+.fade-bg-leave-to {
+  opacity: 0;
+}
+
+/* 確保離開的圖片不會影響佈局 */
+.fade-bg-leave-active {
+  position: absolute;
+}
+
+img {
+  display: block;
+  filter: saturate(0.9);
 }
 </style>

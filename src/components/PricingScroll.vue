@@ -41,8 +41,9 @@ const scrollToPlan = (index: number) => {
 <template>
   <div class="bg-[#f2eedc] py-16 overflow-hidden font-serif">
     
-    <nav class="max-w-4xl mx-auto mb-16 px-4">
-      <ul class="flex flex-wrap justify-center gap-4 md:gap-8 border-b border-black/10 pb-6">
+    <nav class="max-w-7xl mx-auto mb-16 px-6 md:px-20">
+      
+      <ul class="flex flex-wrap justify-start gap-4 md:gap-8 border-b border-black/10 pb-6">
         <li 
           v-for="(plan, index) in plans" 
           :key="index"

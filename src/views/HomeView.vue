@@ -84,16 +84,21 @@ onUnmounted(() => {
 
     </section>
 
-    <section id="pricing" class="min-h-screen">
-      <div class="w-full pt-12 pb-0 z-20 bg-[#f2eedc] flex flex-col items-center">
-        <h2 class="text-3xl md:text-5xl font-black tracking-[0.5em] text-black ml-[0.5em]">
-          方案內容
-        </h2>
-        
-        <p class="text-gray-400 text-xs md:text-sm tracking-[0.3em] uppercase mt-4 font-light">
-          Service Packages & Pricing
-        </p>
+    <section id="pricing" class="min-h-screen bg-[#f2eedc]"> <div class="w-full pt-24 pb-12 z-20 bg-[#f2eedc]">
+    
+        <div class="max-w-7xl mx-auto px-6 md:px-20 flex flex-col items-start">
+          
+          <h2 class="text-3xl md:text-5xl font-light tracking-[0.5em] text-[#002B40]">
+            方案內容
+          </h2>
+          
+          <p class="text-gray-400 text-xs md:text-sm tracking-[0.3em] uppercase mt-4 font-light">
+            Service Packages & Pricing
+          </p>
+          
+        </div>
       </div>
+
       <PricingScroll />
     </section>
 
