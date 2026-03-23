@@ -108,7 +108,6 @@ const getImageUrl = (name: string) => {
       </swiper>
     </div>
 
-    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[150%] h-[400px] bg-[#002B40] rounded-[50%] translate-y-1/2 z-0"></div>
   </main>
   
   <ContactUs />
