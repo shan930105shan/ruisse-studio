@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 // 引入 Swiper Vue 元件
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Controller, FreeMode } from 'swiper/modules';
+import { Autoplay, FreeMode } from 'swiper/modules';
 
 // 引入 Swiper 樣式
 import 'swiper/css';
@@ -17,6 +17,11 @@ const plans = [
   { title: '客製化寫真', price: '1990$UP', img: new URL('../assets/images/shooting-plan/plan-customized.jpg', import.meta.url).href, features: ['2小時拍攝', '8張精修圖', '客製化佈置'] }
 ];
 
+// 🚀 重點 1：自動複製資料給 Swiper 使用，確保 loop 順暢
+const extendedPlans = computed(() => {
+  return [...plans, ...plans, ...plans]; // 複製三份
+});
+
 const swiperInstance = ref<any>(null);
 const activeIndex = ref(0);
 
@@ -24,16 +29,16 @@ const onSwiper = (swiper: any) => {
   swiperInstance.value = swiper;
 };
 
-// 當滑動時更新當前索引，用來亮起上方標籤
+// 🚀 重點 2：使用 realIndex 確保亮起的導覽列永遠對應原始的 0-5
 const onSlideChange = (swiper: any) => {
-  // swiper.realIndex 會給出原始資料的索引（0-5），不會受 loop 影響
   activeIndex.value = swiper.realIndex;
 };
 
-// 點擊標籤跳轉到該方案
+// 點擊導覽列跳轉
 const scrollToPlan = (index: number) => {
   if (swiperInstance.value) {
-    swiperInstance.value.slideToLoop(index);
+    // slideToLoop 會根據原始索引找到最近的那個 Slide
+    swiperInstance.value.slideToLoop(index, 600);
   }
 };
 </script>
@@ -42,11 +47,10 @@ const scrollToPlan = (index: number) => {
   <div class="bg-[#f2eedc] py-16 overflow-hidden font-serif">
     
     <nav class="max-w-7xl mx-auto mb-16 px-6 md:px-20">
-      
       <ul class="flex flex-wrap justify-start gap-4 md:gap-8 border-b border-black/10 pb-6">
         <li 
           v-for="(plan, index) in plans" 
-          :key="index"
+          :key="`nav-${index}`"
           @click="scrollToPlan(index)"
           :class="[
             'cursor-pointer text-sm md:text-base tracking-widest transition-all duration-300 pb-2 border-b-2',
@@ -59,18 +63,25 @@ const scrollToPlan = (index: number) => {
     </nav>
 
     <swiper
-      :modules="[FreeMode]"
+      v-if="extendedPlans.length > 0"
+      :key="extendedPlans.length"
+      :modules="[Autoplay, FreeMode]"
       :slides-per-view="'auto'"
       :centered-slides="true"
       :space-between="30"
       :loop="true"
+      :looped-slides="10"
       :grab-cursor="true"
-
+      :autoplay="{
+        delay: 3500,
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true
+      }"
       class="pricing-swiper"
       @swiper="onSwiper"
       @slideChange="onSlideChange"
     >
-      <swiper-slide v-for="(plan, i) in plans" :key="i" class="plan-slide">
+      <swiper-slide v-for="(plan, i) in extendedPlans" :key="`slide-${i}`" class="plan-slide">
         <div class="card-container transition-all duration-500 ease-out">
           <div class="image-wrapper shadow-2xl bg-white overflow-hidden mb-8 border border-black/5">
             <img :src="plan.img" class="w-full h-full object-cover" />
@@ -94,43 +105,40 @@ const scrollToPlan = (index: number) => {
 </template>
 
 <style scoped>
-/* 預設卡片尺寸 */
 .plan-slide {
-  width: 240px; /* 手機版寬度 */
+  width: 280px; 
 }
 
 @media (min-width: 768px) {
   .plan-slide {
-    width: 360px; /* 桌機版寬度 */
+    width: 400px; 
   }
 }
 
 .card-container {
-  transform: scale(0.75); /* 非中間的卡片縮小 */
-  filter: grayscale(40%); /* 非中間的卡片稍微灰階（選用，更有高級感） */
+  transform: scale(0.85);
+  filter: grayscale(40%);
 }
 
 .image-wrapper {
-  aspect-ratio: 3 / 4; /* 統一卡片比例 */
+  aspect-ratio: 3 / 4;
 }
 
-/* --- 重點：當卡片在正中間時的樣式 --- */
 :deep(.swiper-slide-active) .card-container {
-  transform: scale(1.05); /* 中間放大 */
+  transform: scale(1.0);
   filter: grayscale(0%);
 }
 
 :deep(.swiper-slide-active) .text-content {
-  opacity: 1; /* 中間文字變清楚 */
+  opacity: 1;
 }
 
-/* 移除滑鼠滾輪干擾：Swiper 預設就不會被頁面滾輪控制，除非開啟 mousewheel 模組 */
 .pricing-swiper {
+  padding-top: 20px;
   padding-bottom: 50px;
-  cursor: grab;
 }
 
-.pricing-swiper:active {
-  cursor: grabbing;
+.font-serif {
+  font-family: "Noto Serif TC", serif;
 }
 </style>

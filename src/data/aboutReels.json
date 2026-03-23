@@ -1,20 +1,20 @@
 [
-  {
-    "id": 1,
-    "url": "https://www.instagram.com/reels/DDjvLPrBbGr/",
-    "image": "reels-01.jpg",
-    "alt": "Reels1"
-  },
-  {
-    "id": 2,
-    "url": "https://www.instagram.com/reel/DIJX_GrB1Ki/",
-    "image": "reels-02.jpg",
-    "alt": "Reels2"
-  },
-  {
-    "id": 3,
-    "url": "https://www.instagram.com/reel/DDjvLPrBbGr/",
-    "image": "reels-03.jpg",
-    "alt": "Reels3"
-  }
+  { "id": 1, "url": "https://www.instagram.com/reel/DVYEOuNAf9R/", "image": "reels-01.jpg", "alt": "Reels1" },
+  { "id": 2, "url": "https://www.instagram.com/reel/DHgJKHHBiXh/", "image": "reels-02.jpg", "alt": "Reels2" },
+  { "id": 3, "url": "https://www.instagram.com/reel/DVx1xGxkolc/", "image": "reels-03.jpg", "alt": "Reels3" },
+  { "id": 4, "url": "https://www.instagram.com/reel/DVk9hDVAWtL/", "image": "reels-04.jpg", "alt": "Reels4" },
+  { "id": 5, "url": "https://www.instagram.com/reel/DSfFUKtAdLP/", "image": "reels-05.jpg", "alt": "Reels5" },
+  { "id": 6, "url": "https://www.instagram.com/reel/DScceIJk57Q/", "image": "reels-06.jpg", "alt": "Reels6" },
+  { "id": 7, "url": "https://www.instagram.com/reel/DVGHN-nEgZc/", "image": "reels-07.jpg", "alt": "Reels7" },
+  { "id": 8, "url": "https://www.instagram.com/reel/DVTAhEsgUfG/", "image": "reels-08.jpg", "alt": "Reels8" },
+  { "id": 9, "url": "https://www.instagram.com/reel/DRE-tccAX4O/", "image": "reels-09.jpg", "alt": "Reels9" },
+  { "id": 10, "url": "https://www.instagram.com/reel/DUu53ZNAYa2/", "image": "reels-10.jpg", "alt": "Reels10" },
+  { "id": 11, "url": "https://www.instagram.com/reel/DThtfByAafv/", "image": "reels-11.jpg", "alt": "Reels11" },
+  { "id": 12, "url": "https://www.instagram.com/reel/DLcfO1mhP4r/", "image": "reels-12.jpg", "alt": "Reels12" },
+  { "id": 13, "url": "https://www.instagram.com/reel/DKrqA82hYfJ/", "image": "reels-13.jpg", "alt": "Reels13" },
+  { "id": 14, "url": "https://www.instagram.com/reel/DE94txjBFuJ/", "image": "reels-14.jpg", "alt": "Reels14" },
+  { "id": 15, "url": "https://www.instagram.com/reel/DIylA0MBul6/", "image": "reels-15.jpg", "alt": "Reels15" },
+  { "id": 16, "url": "https://www.instagram.com/reel/DTaCIa3gf_E/", "image": "reels-16.jpg", "alt": "Reels16" },
+  { "id": 17, "url": "https://www.instagram.com/reel/DI5Dr9EhBTt/", "image": "reels-17.jpg", "alt": "Reels17" },
+  { "id": 18, "url": "https://www.instagram.com/reel/DGaqcM6BYyy/", "image": "reels-18.jpg", "alt": "Reels18" }
 ]

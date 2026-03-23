@@ -9,7 +9,7 @@ const categories = [
   { id: 'japanese', name: '日系風格', keyword: 'jp' },
   { id: 'nature', name: '森林 / 海洋系', keyword: 'nature' },
   { id: 'retro', name: '復古風格', keyword: 'retro' },
-  { id: 'couple', name: '雙人寫真', keyword: 'couple' }
+  { id: 'couple', name: '多人寫真', keyword: 'couple' }
 ]
 
 const photoGallery = ref([])
