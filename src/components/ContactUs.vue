@@ -8,7 +8,7 @@
       <div class="flex flex-col md:flex-row justify-between items-start gap-12 mb-20">
         <div class="space-y-6 max-w-xl">
           <p class="text-lg tracking-widest opacity-90">
-            若對拍攝方案有任何問題請聯絡我們
+            一起拍一組好玩的照片吧
           </p>
           <div class="space-y-2">
             <p class="text-lg tracking-widest opacity-90">拍攝採預約制</p>

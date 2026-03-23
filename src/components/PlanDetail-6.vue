@@ -39,45 +39,11 @@ const goToGallery = () => {
 </script>
 
 <template>
-  <section ref="sectionRef" class="w-full min-h-screen bg-[#f2eedc] flex items-center justify-center py-20 px-4 md:px-20 font-serif overflow-hidden">
-    <div class="max-w-7xl w-full grid grid-cols-12 grid-rows-7 gap-4 h-[85vh]">
+  <section ref="sectionRef" class="w-full min-h-screen bg-[#f2eedc] flex items-center justify-center py-10 md:py-20 px-4 md:px-20 font-serif overflow-hidden">
+    
+    <div class="max-w-7xl w-full grid grid-cols-2 md:grid-cols-12 md:grid-rows-7 gap-3 md:gap-4 h-auto md:h-[85vh]">
       
-      <div class="col-span-4 row-span-5 overflow-hidden col-start-1 row-start-1">
-        <div class="w-full h-full transition-all duration-1000 transform"
-             :class="isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'">
-          <img :src="plan6_4" class="w-full h-full object-cover" alt="細節" loading="lazy"/>
-        </div>
-      </div>
-
-      <div class="col-span-2 row-span-2 overflow-hidden col-start-1 row-start-6">
-        <div class="w-full h-full transition-all duration-1000 delay-700 transform"
-             :class="isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'">
-          <img :src="plan6_5" class="w-full h-full object-cover" alt="小圖1" loading="lazy"/>
-        </div>
-      </div>
-
-      <div class="col-span-2 row-span-2 overflow-hidden col-start-3 row-start-6">
-        <div class="w-full h-full transition-all duration-1000 delay-800 transform"
-             :class="isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'">
-          <img :src="plan6_6" class="w-full h-full object-cover" alt="小圖2" loading="lazy"/>
-        </div>
-      </div>
-
-      <div class="col-span-4 row-span-3 overflow-hidden col-start-5">
-        <div class="w-full h-full transition-all duration-1000 delay-300 transform"
-             :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'">
-          <img :src="plan6_2" class="w-full h-full object-cover" alt="花絮1" loading="lazy"/>
-        </div>
-      </div>
-
-      <div class="col-span-4 row-span-4 overflow-hidden col-start-5 row-start-4">
-        <div class="w-full h-full transition-all duration-1000 delay-500 transform"
-             :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
-          <img :src="plan6_3" class="w-full h-full object-cover" alt="花絮2" loading="lazy"/>
-        </div>
-      </div>
-
-      <div class="col-span-4 row-span-7 overflow-hidden group relative col-start-9 row-start-1">
+      <div class="col-span-2 md:col-span-4 md:row-span-7 md:col-start-9 md:row-start-1 overflow-hidden group relative aspect-[3/2] md:aspect-auto">
         <div class="w-full h-full transition-all duration-1000 delay-200 transform"
              :class="isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'">
           <img 
@@ -88,11 +54,46 @@ const goToGallery = () => {
           />
           
           <div @click="goToGallery" class="absolute inset-0 bg-[#002B40]/70 flex flex-col items-center justify-center text-white p-6 cursor-pointer">
-            <h2 class="text-2xl md:text-3xl tracking-[0.4em] font-light border-b border-white/30 pb-4 mb-4">
+            <h2 class="text-xl md:text-3xl tracking-[0.4em] font-light border-b border-white/30 pb-4 mb-4">
               客製化寫真
             </h2>
-            <p class="text-xs tracking-widest opacity-80 uppercase">Customized Photography</p>
+            <p class="text-[10px] md:text-xs tracking-widest opacity-80 uppercase">Customized Photography</p>
           </div>
+        </div>
+      </div>
+
+      <div class="col-span-1 md:col-span-4 md:row-span-5 md:col-start-1 md:row-start-1 overflow-hidden aspect-[2/3] md:aspect-auto">
+        <div class="w-full h-full transition-all duration-1000 transform"
+             :class="isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'">
+          <img :src="plan6_4" class="w-full h-full object-cover" alt="細節" loading="lazy"/>
+        </div>
+      </div>
+
+      <div class="col-span-1 md:col-span-4 md:row-span-3 md:col-start-5 overflow-hidden aspect-[2/3] md:aspect-auto">
+        <div class="w-full h-full transition-all duration-1000 delay-300 transform"
+             :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'">
+          <img :src="plan6_2" class="w-full h-full object-cover" alt="花絮1" loading="lazy"/>
+        </div>
+      </div>
+
+      <div class="hidden md:block col-span-2 row-span-2 col-start-1 row-start-6 overflow-hidden">
+        <div class="w-full h-full transition-all duration-1000 delay-700 transform"
+             :class="isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'">
+          <img :src="plan6_5" class="w-full h-full object-cover" alt="小圖1" loading="lazy"/>
+        </div>
+      </div>
+
+      <div class="hidden md:block col-span-2 row-span-2 col-start-3 row-start-6 overflow-hidden">
+        <div class="w-full h-full transition-all duration-1000 delay-800 transform"
+             :class="isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'">
+          <img :src="plan6_6" class="w-full h-full object-cover" alt="小圖2" loading="lazy"/>
+        </div>
+      </div>
+
+      <div class="hidden md:block col-span-4 row-span-4 col-start-5 row-start-4 overflow-hidden">
+        <div class="w-full h-full transition-all duration-1000 delay-500 transform"
+             :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+          <img :src="plan6_3" class="w-full h-full object-cover" alt="花絮2" loading="lazy"/>
         </div>
       </div>
 

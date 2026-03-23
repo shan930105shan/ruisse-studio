@@ -46,20 +46,30 @@ onUnmounted(() => {
     <section id="hero" class="min-h-screen flex flex-col mt-0 items-center justify-between overflow-hidden relative bg-[#002B40]">
 
       <h1 
-        class="text-white text-4xl md:text-6xl tracking-[0.8em] pt-45 md:pt-60 md:tracking-[1.0em] font-light ml-[1.2em] md:ml-[1.5em] mb-12 whitespace-nowrap transition-transform duration-75 ease-out"
+        class="text-white text-xl md:text-6xl tracking-[0.5em] pt-45 md:pt-60 md:tracking-[1.0em] font-light ml-[0.6em] md:ml-[1.5em] mb-12 whitespace-nowrap transition-transform duration-75 ease-out"
         :style="{ transform: `translateY(${scrollY * 0.4}px)` }"
       >
         RUISSE STUDIO
       </h1>
 
       <div 
-        class="text-gray-300 space-y-6 tracking-[0.5em] md:tracking-[0.8em] ml-[0.5em] md:ml-[0.8em] text-center transition-transform duration-75 ease-out"
+        class="text-gray-300 space-y-3 md:space-y-6 tracking-[0.2em] md:tracking-[0.8em] text-center transition-transform duration-75 ease-out px-4"
         :style="{ transform: `translateY(${scrollY * 0.5}px)` }"
       >
-        <p class="text-base md:text-lg min-h-[1.5em]">
-          <Typewriter :words="['影像，讓生活更不一樣，捕捉瞬息萬變的美好']" />
-        </p>
-        <p class="text-xs md:text-sm opacity-70">
+        <div class="flex flex-col md:flex-row items-center justify-center text-[10px] md:text-lg min-h-[3.5em] md:min-h-[1.5em]">
+          
+          <div class="whitespace-nowrap flex items-center">
+            <Typewriter :words="['影像，讓生活更不一樣']" />
+            <span class="hidden md:inline mr-2">，</span>
+          </div>
+          
+          <div class="whitespace-nowrap">
+            <Typewriter :words="['捕捉瞬息萬變的美好']" />
+          </div>
+          
+        </div>
+
+        <p class="text-[9px] md:text-sm opacity-50 tracking-[0.2em] md:tracking-widest">
           歡迎一同和我們創作屬於你的新篇章
         </p>
       </div>
