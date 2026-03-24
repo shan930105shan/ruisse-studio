@@ -18,7 +18,7 @@ const fetchReels = async () => {
   try {
     const response = await contentfulClient.getEntries({
       content_type: 'reelsItem', // 這是你在 Contentful 設定的 API ID
-      order: ['fields.ID']       // 依照你設定的 ID 排序
+      order: ['fields.ID'] as any      // 依照你設定的 ID 排序
     })
     
     // 將抓回來的資料格式化成你原本 JSON 的樣子
