@@ -1,35 +1,42 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
-
-// 圖片匯入
-import plan2_1 from '@/assets/images/model-card/plan2_1.jpg'
-import plan2_2 from '@/assets/images/model-card/plan2_2.jpg'
-import plan2_3 from '@/assets/images/model-card/plan2_3.jpg'
-import plan2_4 from '@/assets/images/model-card/plan2_4.jpg'
-import plan2_5 from '@/assets/images/model-card/plan2_5.jpg'
-import plan2_6 from '@/assets/images/model-card/plan2_6.jpg'
+// 1. 引入 Contentful 抓取函數
+import { fetchGalleryImages } from '@/contentful';
 
 const router = useRouter();
 const sectionRef = ref<HTMLElement | null>(null);
 const isVisible = ref(false);
 
-// --- 輪播邏輯 ---
-const images = [plan2_1, plan2_2, plan2_3, plan2_4, plan2_5, plan2_6];
+// --- 資料抓取與輪播邏輯 ---
+const galleryData = ref<{ url: string; title: string }[]>([]);
 const currentImageIndex = ref(0);
 let timer: number | null = null;
 
+// 計算屬性：提取圖片網址陣列
+const images = computed(() => galleryData.value.map(item => item.url));
+
 const startCarousel = () => {
+  if (timer) clearInterval(timer);
   timer = window.setInterval(() => {
-    currentImageIndex.value = (currentImageIndex.value + 1) % images.length;
-  }, 1000); // 每 1 秒更換一張
+    if (images.value.length > 0) {
+      currentImageIndex.value = (currentImageIndex.value + 1) % images.value.length;
+    }
+  }, 1000); 
 };
 
 let observer: IntersectionObserver | null = null;
 
-onMounted(() => {
-  startCarousel(); // 啟動輪播
+onMounted(async () => {
+  // 2. 抓取形象模卡的資料 (請與 Contentful 後台 serviceName 一致)
+  const data = await fetchGalleryImages('model-card');
+  galleryData.value = data;
 
+  if (data.length > 0) {
+    startCarousel();
+  }
+
+  // 3. 動態監測
   observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -55,7 +62,7 @@ const goToGallery = () => {
 <template>
   <section ref="sectionRef" class="w-full min-h-screen bg-[#f2eedc] flex items-center justify-center py-10 md:py-20 px-4 md:px-20 font-serif overflow-hidden">
     
-    <div class="max-w-7xl w-full grid grid-cols-2 md:grid-cols-12 md:grid-rows-7 gap-3 md:gap-4 h-auto md:h-[85vh]">
+    <div v-if="images.length > 0" class="max-w-7xl w-full grid grid-cols-2 md:grid-cols-12 md:grid-rows-7 gap-3 md:gap-4 h-auto md:h-[85vh]">
       
       <div class="col-span-2 md:col-span-4 md:row-span-7 md:col-start-9 md:row-start-1 overflow-hidden group relative aspect-[3/2] md:aspect-auto">
         <div class="w-full h-full transition-all duration-1000 delay-200 transform"
@@ -63,10 +70,10 @@ const goToGallery = () => {
           
           <TransitionGroup name="fade-bg">
             <img 
-              v-for="(img, index) in images" 
-              :key="img"
+              v-for="(imgUrl, index) in images" 
+              :key="imgUrl"
               v-show="currentImageIndex === index"
-              :src="img" 
+              :src="imgUrl" 
               class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
               alt="形象模卡輪播" 
             />
@@ -82,35 +89,35 @@ const goToGallery = () => {
       <div class="col-span-1 md:col-span-4 md:row-span-5 md:col-start-1 md:row-start-1 overflow-hidden aspect-[2/3] md:aspect-auto">
         <div class="w-full h-full transition-all duration-1000 transform"
              :class="isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'">
-          <img :src="plan2_4" class="w-full h-full object-cover" alt="細節" loading="lazy"/>
+          <img :src="images[3] || images[0]" class="w-full h-full object-cover" alt="細節" loading="lazy"/>
         </div>
       </div>
 
       <div class="col-span-1 md:col-span-4 md:row-span-3 md:col-start-5 overflow-hidden aspect-[2/3] md:aspect-auto">
         <div class="w-full h-full transition-all duration-1000 delay-300 transform"
              :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'">
-          <img :src="plan2_2" class="w-full h-full object-cover" alt="花絮1" loading="lazy"/>
+          <img :src="images[1] || images[0]" class="w-full h-full object-cover" alt="花絮1" loading="lazy"/>
         </div>
       </div>
 
       <div class="hidden md:block col-span-2 row-span-2 col-start-1 row-start-6 overflow-hidden">
         <div class="w-full h-full transition-all duration-1000 delay-700 transform"
              :class="isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'">
-          <img :src="plan2_5" class="w-full h-full object-cover" alt="小圖1" loading="lazy"/>
+          <img :src="images[4] || images[0]" class="w-full h-full object-cover" alt="小圖1" loading="lazy"/>
         </div>
       </div>
 
       <div class="hidden md:block col-span-2 row-span-2 col-start-3 row-start-6 overflow-hidden">
         <div class="w-full h-full transition-all duration-1000 delay-800 transform"
              :class="isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'">
-          <img :src="plan2_6" class="w-full h-full object-cover" alt="小圖2" loading="lazy"/>
+          <img :src="images[5] || images[0]" class="w-full h-full object-cover" alt="小圖2" loading="lazy"/>
         </div>
       </div>
 
       <div class="hidden md:block col-span-4 row-span-4 col-start-5 row-start-4 overflow-hidden">
         <div class="w-full h-full transition-all duration-1000 delay-500 transform"
              :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
-          <img :src="plan2_3" class="w-full h-full object-cover" alt="花絮2" loading="lazy"/>
+          <img :src="images[2] || images[0]" class="w-full h-full object-cover" alt="花絮2" loading="lazy"/>
         </div>
       </div>
 
