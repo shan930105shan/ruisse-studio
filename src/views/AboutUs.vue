@@ -1,19 +1,45 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue' // 引入 ref 和生命週期
 import Navbar from '@/components/Navbar.vue'
 import ContactUs from '@/components/ContactUs.vue'
-// 引入 Swiper 核心組件與模組
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay, Pagination } from 'swiper/modules'
-// 引入 Swiper 樣式
 import 'swiper/css'
 import 'swiper/css/pagination'
 
-// 引入 JSON
-import reelsData from '@/data/aboutReels.json'
+// 1. 引入剛剛建立的 client
+import { contentfulClient } from '@/contentful'
 
-// 動態圖片處理邏輯
+// 2. 定義響應式變數來存放 Reels 資料
+const reelsData = ref<any[]>([])
+
+// 3. 抓取資料的函式
+const fetchReels = async () => {
+  try {
+    const response = await contentfulClient.getEntries({
+      content_type: 'reelsItem', // 這是你在 Contentful 設定的 API ID
+      order: ['fields.ID']       // 依照你設定的 ID 排序
+    })
+    
+    // 將抓回來的資料格式化成你原本 JSON 的樣子
+      reelsData.value = response.items.map((item: any) => ({
+      id: item.fields.ID,   // 改為大寫 ID
+      url: item.fields.URL, // 改為大寫 URL
+      image: `reels-${String(item.fields.ID).padStart(2, '0')}.jpg`,
+      alt: `Reels${item.fields.ID}`
+    }))
+  } catch (error) {
+    console.error('抓取 Reels 資料失敗:', error)
+  }
+}
+
+// 4. 在組件掛載時執行抓取
+onMounted(() => {
+  fetchReels()
+})
+
+// 原有的圖片路徑邏輯維持不變
 const getImageUrl = (name: string) => {
-  // 假設圖片放在 src/assets/images/about/
   return new URL(`../assets/images/about/${name}`, import.meta.url).href
 }
 </script>
@@ -71,6 +97,7 @@ const getImageUrl = (name: string) => {
 
     <div class="max-w-7xl mx-auto px-6 mb-32 relative z-10 pb-20">
       <swiper
+        v-if="reelsData.length > 0"
         :modules="[Autoplay, Pagination]"
         :slides-per-view="1"
         :space-between="20"
