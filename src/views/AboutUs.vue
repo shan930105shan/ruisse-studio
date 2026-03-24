@@ -15,18 +15,17 @@ const reelsData = ref<any[]>([])
 
 // 3. 抓取資料的函式
 const fetchReels = async () => {
-  try {
+    try {
     const response = await contentfulClient.getEntries({
-      content_type: 'reelsItem', // 這是你在 Contentful 設定的 API ID
-      order: ['fields.ID'] as any      // 依照你設定的 ID 排序
+      content_type: 'reelsItem',
+      order: 'fields.id' as any// 改為小寫，這對應的是 Field ID
     })
     
-    // 將抓回來的資料格式化成你原本 JSON 的樣子
-      reelsData.value = response.items.map((item: any) => ({
-      id: item.fields.ID,   // 改為大寫 ID
-      url: item.fields.URL, // 改為大寫 URL
-      image: `reels-${String(item.fields.ID).padStart(2, '0')}.jpg`,
-      alt: `Reels${item.fields.ID}`
+    reelsData.value = response.items.map((item: any) => ({
+      id: item.fields.id,   // 改為小寫
+      url: item.fields.url, // 改為小寫
+      image: `reels-${String(item.fields.id).padStart(2, '0')}.jpg`,
+      alt: `Reels${item.fields.id}`
     }))
   } catch (error) {
     console.error('抓取 Reels 資料失敗:', error)
