@@ -2,48 +2,32 @@
 import { ref, onMounted } from 'vue'
 import Navbar from '@/components/Navbar.vue'
 import ContactUs from '@/components/ContactUs.vue'
+// 1. 引入新 API 函數
+import { fetchModelCardPortfolio } from '@/contentful'
 
-// 1. 修改為形象模卡的分類
 const categories = [
   { id: 'all', name: '全部' },
-  { id: 'business', name: '職場形象照', keyword: 'business' },
-  { id: 'korean', name: '韓式形象照', keyword: 'korean' }
+  { id: 'business', name: '職場形象照' },
+  { id: 'korean', name: '韓式形象照' }
 ]
 
 const photoGallery = ref([])
 
-// 2. 自動掃描資料夾（路徑改為 gallery/model-card/）
-const loadPhotos = () => {
-  // 記得去建立這個資料夾：assets/images/gallery/model-card/
-  const images = import.meta.glob('@/assets/images/gallery/model-card/*.{png,jpg,jpeg,webp}', { eager: true })
-  
-  const allPhotos = Object.keys(images).map((path, index) => {
-    const fullFileName = path.split('/').pop().toLowerCase()
-    const fileName = fullFileName.substring(0, fullFileName.lastIndexOf('.'))
-    
-    let category = 'other'
-    
-    // 3. 判斷邏輯：根據檔名關鍵字分類
-    if (fileName.includes('business')) {
-      category = 'business'
-    } else if (fileName.includes('korean')) {
-      category = 'korean'
-    }
-
-    return {
-      id: index,
-      category: category,
-      src: images[path].default || images[path]
-    }
-  })
-  
-  photoGallery.value = allPhotos
+// 2. 透過 API 載入資料
+const loadPhotos = async () => {
+  try {
+    const data = await fetchModelCardPortfolio();
+    photoGallery.value = data;
+  } catch (error) {
+    console.error("載入作品失敗:", error);
+  }
 }
 
 onMounted(() => {
   loadPhotos()
 })
 
+// 捲動邏輯保持不變
 const scrollToCategory = (id) => {
   if (id === 'all') {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -109,7 +93,6 @@ const scrollToCategory = (id) => {
 
   <ContactUs />
 </template>
-
 <style scoped>
 .break-inside-avoid {
   break-inside: avoid;

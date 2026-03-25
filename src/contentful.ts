@@ -111,3 +111,33 @@ export const fetchOutdoorPortfolio = async () => {
     return [];
   }
 };
+
+/**
+ * 5. 形象模卡作品集抓取函數 (ModelCardPortfolio)
+ * 支援一個 Entry 多張照片 (flatMap)
+ */
+export const fetchModelCardPortfolio = async () => {
+  try {
+    const response = await contentfulClient.getEntries({
+      content_type: 'modelCardPortfolio',
+      order: '-sys.createdAt' as any,
+    });
+
+    return response.items.flatMap((item: any) => {
+      const category = item.fields.category;
+      const assets = item.fields.photos || [];
+
+      return assets.map((asset: any) => ({
+        id: asset.sys.id,
+        title: asset.fields.title,
+        category: category,
+        src: asset.fields.file.url.startsWith('//') 
+             ? `https:${asset.fields.file.url}` 
+             : asset.fields.file.url
+      }));
+    });
+  } catch (error) {
+    console.error('抓取形象模卡作品失敗:', error);
+    return [];
+  }
+};
