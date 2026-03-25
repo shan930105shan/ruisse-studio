@@ -2,60 +2,35 @@
 import { ref, onMounted } from 'vue'
 import Navbar from '@/components/Navbar.vue'
 import ContactUs from '@/components/ContactUs.vue'
+// 1. 引入 Contentful 抓取函數
+import { fetchOutdoorPortfolio } from '@/contentful'
 
-// 1. 定義分類
+// 定義分類（維持原樣，但 ID 需與 Contentful 的 Category 選單值對應）
 const categories = [
   { id: 'all', name: '全部' },
-  { id: 'japanese', name: '日系風格', keyword: 'jp' },
-  { id: 'nature', name: '森林 / 海洋系', keyword: 'nature' },
-  { id: 'retro', name: '復古風格', keyword: 'retro' },
-  { id: 'couple', name: '多人寫真', keyword: 'couple' }
+  { id: 'japanese', name: '日系風格' },
+  { id: 'nature', name: '森林 / 海洋系' },
+  { id: 'retro', name: '復古風格' },
+  { id: 'couple', name: '多人寫真' }
 ]
 
 const photoGallery = ref([])
 
-// 2. 自動掃描資料夾下的圖片
-// 這會抓取 assets/images/gallery/outdoor/ 下所有的 jpg, png, webp
-const loadPhotos = () => {
-  const images = import.meta.glob('@/assets/images/gallery/outdoor/*.{png,jpg,jpeg,webp}', { eager: true })
-  
-  const allPhotos = Object.keys(images).map((path, index) => {
-    // 1. 先取得完整檔名 (例如: nature-01.jpg)
-    const fullFileName = path.split('/').pop().toLowerCase()
-    
-    // 2. 去掉副檔名，只留下純檔名 (例如: nature-01)
-    // 這行會把最後一個點之後的字都刪掉
-    const fileName = fullFileName.substring(0, fullFileName.lastIndexOf('.'))
-    
-    let category = 'other'
-    
-    // 3. 判斷邏輯（建議把較長的單字放在前面，或確保關鍵字不會重疊）
-    if (fileName.includes('nature')) {
-      category = 'nature'
-    } else if (fileName.includes('retro')) {
-      category = 'retro'
-    } else if (fileName.includes('couple')) {
-      category = 'couple'
-    } else if (fileName.includes('jp')) {
-      // 現在這裡只會檢查檔名有沒有 jp，不會被 .jpg 影響了
-      category = 'japanese'
-    }
-
-    return {
-      id: index,
-      category: category,
-      src: images[path].default || images[path]
-    }
-  })
-  
-  photoGallery.value = allPhotos
+// 2. 改為從 Contentful 載入
+const loadPhotos = async () => {
+  try {
+    const data = await fetchOutdoorPortfolio();
+    photoGallery.value = data;
+  } catch (error) {
+    console.error("載入作品集失敗:", error);
+  }
 }
 
 onMounted(() => {
   loadPhotos()
 })
 
-// 捲動邏輯
+// 捲動邏輯保持不變
 const scrollToCategory = (id) => {
   if (id === 'all') {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -106,6 +81,7 @@ const scrollToCategory = (id) => {
           >
             <img 
               :src="photo.src" 
+              :alt="photo.title"
               class="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 shadow-sm hover:shadow-xl"
               loading="lazy"
             />
