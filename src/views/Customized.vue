@@ -2,43 +2,27 @@
 import { ref, onMounted } from 'vue'
 import Navbar from '@/components/Navbar.vue'
 import ContactUs from '@/components/ContactUs.vue'
+// 1. 引入 API 函數
+import { fetchCustomizedPortfolio } from '@/contentful'
 
-// 1. 定義客製化寫真的分類
+// 定義分類（ID 需與 Contentful 選單值一致）
 const categories = [
   { id: 'all', name: '全部' },
-  { id: 'festival', name: '特殊節慶', keyword: 'festival' },
-  { id: 'garden', name: '花園系列', keyword: 'garden' },
-  { id: 'other', name: '其他風格', keyword: 'other' }
+  { id: 'festival', name: '特殊節慶' },
+  { id: 'garden', name: '花園系列' },
+  { id: 'other', name: '其他風格' }
 ]
 
 const photoGallery = ref([])
 
-// 2. 自動掃描資料夾（路徑：gallery/customized/）
-const loadPhotos = () => {
-  // 記得建立資料夾：assets/images/gallery/customized/
-  const images = import.meta.glob('@/assets/images/gallery/customized/*.{png,jpg,jpeg,webp}', { eager: true })
-  
-  const allPhotos = Object.keys(images).map((path, index) => {
-    const fullFileName = path.split('/').pop().toLowerCase()
-    const fileName = fullFileName.substring(0, fullFileName.lastIndexOf('.'))
-    
-    let category = 'other' 
-    
-    // 3. 判斷邏輯
-    if (fileName.includes('festival')) {
-      category = 'festival'
-    } else if (fileName.includes('garden')) {
-      category = 'garden'
-    }
-
-    return {
-      id: index,
-      category: category,
-      src: images[path].default || images[path]
-    }
-  })
-  
-  photoGallery.value = allPhotos
+// 2. 改為雲端抓取
+const loadPhotos = async () => {
+  try {
+    const data = await fetchCustomizedPortfolio();
+    photoGallery.value = data;
+  } catch (error) {
+    console.error("載入客製化作品失敗:", error);
+  }
 }
 
 onMounted(() => {
