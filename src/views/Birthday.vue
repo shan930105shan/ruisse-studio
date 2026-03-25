@@ -2,30 +2,24 @@
 import { ref, onMounted } from 'vue'
 import Navbar from '@/components/Navbar.vue'
 import ContactUs from '@/components/ContactUs.vue'
+// 1. 引入 API 函數
+import { fetchBirthdayPortfolio } from '@/contentful'
 
-// 1. 定義分類：目前僅有一類，保留導航架構
 const categories = [
   { id: 'all', name: '全部' },
-  { id: 'birthday', name: '生日寫真', keyword: 'birthday' }
+  { id: 'birthday', name: '生日寫真' }
 ]
 
 const photoGallery = ref([])
 
-// 2. 自動掃描資料夾（路徑：gallery/birthday/）
-const loadPhotos = () => {
-  // 請確認已建立此資料夾：assets/images/gallery/birthday/
-  const images = import.meta.glob('@/assets/images/gallery/birthday/*.{png,jpg,jpeg,webp}', { eager: true })
-  
-  const allPhotos = Object.keys(images).map((path, index) => {
-    // 3. 目前所有圖片預設歸類為 'birthday'，不需要特別改檔名
-    return {
-      id: index,
-      category: 'birthday',
-      src: images[path].default || images[path]
-    }
-  })
-  
-  photoGallery.value = allPhotos
+// 2. 透過 API 載入資料
+const loadPhotos = async () => {
+  try {
+    const data = await fetchBirthdayPortfolio();
+    photoGallery.value = data;
+  } catch (error) {
+    console.error("載入生日作品失敗:", error);
+  }
 }
 
 onMounted(() => {

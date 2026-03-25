@@ -197,3 +197,32 @@ export const fetchExquisitePortfolio = async () => {
     return [];
   }
 };
+
+/**
+ * 8. 生日寫真作品集抓取函數 (BirthdayPortfolio)
+ */
+export const fetchBirthdayPortfolio = async () => {
+  try {
+    const response = await contentfulClient.getEntries({
+      content_type: 'birthdayPortfolio',
+      order: '-sys.createdAt' as any,
+    });
+
+    return response.items.flatMap((item: any) => {
+      const category = item.fields.category || 'birthday';
+      const assets = item.fields.photo || []; 
+
+      return assets.map((asset: any) => ({
+        id: asset.sys.id,
+        title: asset.fields.title,
+        category: category,
+        src: asset.fields.file.url.startsWith('//') 
+             ? `https:${asset.fields.file.url}` 
+             : asset.fields.file.url
+      }));
+    });
+  } catch (error) {
+    console.error('抓取生日寫真作品失敗:', error);
+    return [];
+  }
+};
