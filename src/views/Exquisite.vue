@@ -2,46 +2,28 @@
 import { ref, onMounted } from 'vue'
 import Navbar from '@/components/Navbar.vue'
 import ContactUs from '@/components/ContactUs.vue'
+// 1. 引入 API 函數
+import { fetchExquisitePortfolio } from '@/contentful'
 
-// 1. 定義精緻寫真的四個分類
+// 定義分類（ID 需與 Contentful 選單值一致）
 const categories = [
   { id: 'all', name: '全部' },
-  { id: 'home', name: '日系居家', keyword: 'home' },
-  { id: 'french', name: '法式光影', keyword: 'french' },
-  { id: 'k-style', name: '韓系風格', keyword: 'kstyle' },
-  { id: 'other', name: '其他風格', keyword: 'other' }
+  { id: 'home', name: '日系居家' },
+  { id: 'french', name: '法式光影' },
+  { id: 'k-style', name: '韓系風格' },
+  { id: 'other', name: '其他風格' }
 ]
 
 const photoGallery = ref([])
 
-// 2. 自動掃描資料夾（路徑：gallery/exquisite/）
-const loadPhotos = () => {
-  // 記得建立資料夾：assets/images/gallery/exquisite/
-  const images = import.meta.glob('@/assets/images/gallery/exquisite/*.{png,jpg,jpeg,webp}', { eager: true })
-  
-  const allPhotos = Object.keys(images).map((path, index) => {
-    const fullFileName = path.split('/').pop().toLowerCase()
-    const fileName = fullFileName.substring(0, fullFileName.lastIndexOf('.'))
-    
-    let category = 'other' // 預設歸類為其他風格
-    
-    // 3. 判斷邏輯（建議檔名包含以下關鍵字）
-    if (fileName.includes('home')) {
-      category = 'home'
-    } else if (fileName.includes('french')) {
-      category = 'french'
-    } else if (fileName.includes('kstyle')) {
-      category = 'k-style'
-    }
-
-    return {
-      id: index,
-      category: category,
-      src: images[path].default || images[path]
-    }
-  })
-  
-  photoGallery.value = allPhotos
+// 2. 改為雲端抓取
+const loadPhotos = async () => {
+  try {
+    const data = await fetchExquisitePortfolio();
+    photoGallery.value = data;
+  } catch (error) {
+    console.error("載入作品失敗:", error);
+  }
 }
 
 onMounted(() => {

@@ -169,3 +169,31 @@ export const fetchLightWeightPortfolio = async () => {
     return [];
   }
 };
+/**
+ * 7. 精緻寫真作品集抓取函數 (ExquisitePortfolio)
+ */
+export const fetchExquisitePortfolio = async () => {
+  try {
+    const response = await contentfulClient.getEntries({
+      content_type: 'exquisitePortfolio',
+      order: '-sys.createdAt' as any,
+    });
+
+    return response.items.flatMap((item: any) => {
+      const category = item.fields.category || 'other';
+      const assets = item.fields.photo || []; 
+
+      return assets.map((asset: any) => ({
+        id: asset.sys.id,
+        title: asset.fields.title,
+        category: category,
+        src: asset.fields.file.url.startsWith('//') 
+             ? `https:${asset.fields.file.url}` 
+             : asset.fields.file.url
+      }));
+    });
+  } catch (error) {
+    console.error('抓取精緻寫真作品失敗:', error);
+    return [];
+  }
+};
