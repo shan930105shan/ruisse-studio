@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue' // 1. 引入 computed
+import { ref, computed, onMounted } from 'vue'
 import Navbar from '@/components/Navbar.vue'
 import ContactUs from '@/components/ContactUs.vue'
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -7,19 +7,49 @@ import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/autoplay';
 
-// 引入原始資料 (10 筆)
-import testimonialData from '@/data/testimonials.json';
+// 1. 引入 Contentful client
+import { contentfulClient } from '@/contentful'
 
-// 2. 自動複製資料邏輯：將 10 筆變成 30 筆，確保 loop 跑得動
+// 2. 定義響應式變數
+const rawTestimonials = ref<any[]>([])
+
+// 3. 抓取雲端回饋資料
+const fetchTestimonials = async () => {
+  try {
+    const response = await contentfulClient.getEntries({
+      content_type: 'testimonial',
+      order: 'fields.order' as any // 依序號排序
+    })
+
+    rawTestimonials.value = response.items.map((item: any) => {
+      const asset = item.fields.avatar;
+      const avatarUrl = asset?.fields?.file?.url;
+
+      return {
+        id: item.sys.id,
+        name: item.fields.name,
+        feedback: item.fields.feedback,
+        // 處理雲端圖片路徑
+        avatar: avatarUrl 
+          ? (avatarUrl.startsWith('//') ? `https:${avatarUrl}` : avatarUrl)
+          : 'https://images.ctfassets.net/placeholder-user.png' // 預設頭貼
+      }
+    })
+  } catch (error) {
+    console.error('抓取客戶回饋失敗:', error)
+  }
+}
+
+// 4. 自動複製資料邏輯：確保 Swiper Loop 順暢
 const displayData = computed(() => {
-  if (!testimonialData || testimonialData.length === 0) return [];
-  // 如果原始資料太少（小於 15 筆），我們就複製三份湊齊數量
-  return [...testimonialData, ...testimonialData, ...testimonialData];
+  if (rawTestimonials.value.length === 0) return [];
+  // 複製三份以確保在大螢幕（slidesPerView: 5）下 loop 不會卡住
+  return [...rawTestimonials.value, ...rawTestimonials.value, ...rawTestimonials.value];
 });
 
-const getImageUrl = (name: string) => {
-  return new URL(`/src/assets/images/avatars/${name}`, import.meta.url).href;
-};
+onMounted(() => {
+  fetchTestimonials()
+})
 </script>
 
 <template>
@@ -62,7 +92,7 @@ const getImageUrl = (name: string) => {
         >
           <div class="flex flex-col items-center text-center px-4">
             <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden mb-6 border-4 border-[#002B40] shadow-sm relative">
-              <img :src="getImageUrl(item.avatar)" :alt="item.name" class="w-full h-full object-cover" />
+              <img :src="item.avatar" :alt="item.name" class="w-full h-full object-cover" />
               <div class="absolute inset-0 bg-[#002B40]/60 transition-opacity duration-500 group-hover:opacity-0"></div>
             </div>
 
@@ -75,6 +105,10 @@ const getImageUrl = (name: string) => {
           </div>
         </swiper-slide>
       </swiper>
+
+      <div v-else class="text-center py-20 opacity-30 tracking-[0.2em]">
+        LOADING FEEDBACK...
+      </div>
 
     </div>
   </section>
