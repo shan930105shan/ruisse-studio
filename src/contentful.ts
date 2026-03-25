@@ -80,21 +80,31 @@ export const fetchReels = async () => {
  * 4. 戶外寫真作品集抓取函數 (OutdoorPortfolio)
  * 用於：Portfolio 頁面，需根據 Category 分類顯示大量圖片
  */
+/**
+ * 4. 戶外寫真作品集抓取函數 (OutdoorPortfolio)
+ * 匹配 Contentful 欄位：title, category, photo (多張圖模式)
+ */
 export const fetchOutdoorPortfolio = async () => {
   try {
     const response = await contentfulClient.getEntries({
-      content_type: 'outdoorPortfolio', // 請確保 Contentful 後台 ID 一致
-      order: '-sys.createdAt' as any,    // 最新發佈的排在最前面
+      content_type: 'outdoorPortfolio',
+      order: '-sys.createdAt' as any,
     });
 
-    return response.items.map((item: any) => {
-      const fileUrl = item.fields.photo?.fields?.file?.url;
-      return {
-        id: item.sys.id,
-        title: item.fields.title,
-        category: item.fields.category, // 例如: 'japanese', 'nature', 'retro', 'couple'
-        src: fileUrl ? (fileUrl.startsWith('//') ? `https:${fileUrl}` : fileUrl) : ''
-      };
+    // 使用 flatMap 將每個 Entry 裡的多張 Photo 攤平
+    return response.items.flatMap((item: any) => {
+      const category = item.fields.category;
+      // 關鍵點：這裡要對應你截圖中的欄位名稱 "photo"
+      const assets = item.fields.photo || []; 
+
+      return assets.map((asset: any) => ({
+        id: asset.sys.id,
+        title: asset.fields.title,
+        category: category,
+        src: asset.fields.file.url.startsWith('//') 
+             ? `https:${asset.fields.file.url}` 
+             : asset.fields.file.url
+      }));
     });
   } catch (error) {
     console.error('抓取戶外寫真作品失敗:', error);
