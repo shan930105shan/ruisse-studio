@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue' // 引入 ref 和生命週期
+import { ref, onMounted } from 'vue'
 import Navbar from '@/components/Navbar.vue'
 import ContactUs from '@/components/ContactUs.vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
@@ -7,7 +7,7 @@ import { Autoplay, Pagination } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
-// 1. 引入剛剛建立的 client
+// 1. 引入 Contentful client
 import { contentfulClient } from '@/contentful'
 
 // 2. 定義響應式變數來存放 Reels 資料
@@ -15,18 +15,27 @@ const reelsData = ref<any[]>([])
 
 // 3. 抓取資料的函式
 const fetchReels = async () => {
-    try {
+  try {
     const response = await contentfulClient.getEntries({
       content_type: 'reelsItem',
-      order: 'fields.id' as any// 改為小寫，這對應的是 Field ID
+      order: 'fields.id' as any // 依據 ID 排序
     })
     
-    reelsData.value = response.items.map((item: any) => ({
-      id: item.fields.id,   // 改為小寫
-      url: item.fields.url, // 改為小寫
-      image: `reels-${String(item.fields.id).padStart(2, '0')}.jpg`,
-      alt: `Reels${item.fields.id}`
-    }))
+    reelsData.value = response.items.map((item: any) => {
+      // 提取雲端圖片資產
+      const asset = item.fields.coverImage;
+      const remoteImageUrl = asset?.fields?.file?.url;
+      
+      return {
+        id: item.fields.id,
+        url: item.fields.url,
+        // 如果有雲端網址則加上 https: 協議，否則可放一個預設占位圖
+        image: remoteImageUrl 
+          ? (remoteImageUrl.startsWith('//') ? `https:${remoteImageUrl}` : remoteImageUrl)
+          : 'https://images.ctfassets.net/placeholder-image.jpg', 
+        alt: item.fields.title || `Reels ${item.fields.id}`
+      }
+    })
   } catch (error) {
     console.error('抓取 Reels 資料失敗:', error)
   }
@@ -36,11 +45,6 @@ const fetchReels = async () => {
 onMounted(() => {
   fetchReels()
 })
-
-// 原有的圖片路徑邏輯維持不變
-const getImageUrl = (name: string) => {
-  return new URL(`../assets/images/about/${name}`, import.meta.url).href
-}
 </script>
 
 <template>
@@ -73,9 +77,9 @@ const getImageUrl = (name: string) => {
     </div>
 
     <div class="text-center mb-10">
-      <h1 class="text-xl md:text-2xl tracking-[0.5em] text-[#002B40] font-medium inline-block md:mr-8">
+      <h2 class="text-xl md:text-2xl tracking-[0.5em] text-[#002B40] font-medium inline-block">
         — 瑞思攝影工作室提供多樣化的人像與影像創作服務 —
-      </h1>
+      </h2>
     </div>
 
     <div class="max-w-7xl mx-auto px-6 py-24 relative z-10">
@@ -89,9 +93,9 @@ const getImageUrl = (name: string) => {
     </div>
 
     <div class="text-center mt-20 mb-16 relative z-10">
-      <h1 class="text-xl md:text-2xl tracking-[0.5em] text-[#002B40] font-medium inline-block">
+      <h2 class="text-xl md:text-2xl tracking-[0.5em] text-[#002B40] font-medium inline-block">
         — 一些真實的我們 —
-      </h1>
+      </h2>
     </div>
 
     <div class="max-w-7xl mx-auto px-6 mb-32 relative z-10 pb-20">
@@ -121,7 +125,7 @@ const getImageUrl = (name: string) => {
             class="aspect-[9/16] block overflow-hidden border border-gray-200 shadow-sm bg-white group cursor-pointer relative"
           >
             <img 
-              :src="getImageUrl(reel.image)" 
+              :src="reel.image" 
               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
               :alt="reel.alt"
               loading="lazy"
@@ -132,6 +136,10 @@ const getImageUrl = (name: string) => {
           </a>
         </swiper-slide>
       </swiper>
+      
+      <div v-else class="text-center py-20 opacity-30 tracking-[0.2em]">
+        LOADING REELS...
+      </div>
     </div>
 
   </main>
@@ -140,7 +148,7 @@ const getImageUrl = (name: string) => {
 </template>
 
 <script lang="ts">
-// 為了簡潔，將服務項目提取成數據
+// 靜態服務清單（未來若要雲端化可再移動）
 const services = [
   { title: '個人寫真拍攝', desc: '定義屬於你的美感，透過細膩的光影紀錄最真實的自我。' },
   { title: '外景拍攝', desc: '走出棚內，在城市街頭或自然山海中，捕捉瞬息萬變的氛圍。' },
@@ -152,13 +160,12 @@ const services = [
 </script>
 
 <style scoped>
-/* 訂製 Swiper 分頁點顏色 */
 :deep(.swiper-pagination-bullet-active) {
   background: #002B40;
 }
 
 .reels-swiper {
-  padding-bottom: 50px; /* 為分頁點留出空間 */
+  padding-bottom: 50px;
 }
 
 .font-serif {
