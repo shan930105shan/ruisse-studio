@@ -2,39 +2,24 @@
 import { ref, onMounted } from 'vue'
 import Navbar from '@/components/Navbar.vue'
 import ContactUs from '@/components/ContactUs.vue'
+// 1. 引入新 API 函數
+import { fetchLightWeightPortfolio } from '@/contentful'
 
-// 1. 定義分類：目前只有一種，但保留結構方便未來新增（如：棚內、居家等）
 const categories = [
   { id: 'all', name: '全部' },
-  { id: 'light', name: '輕盈寫真', keyword: 'light' }
+  { id: 'light', name: '輕盈寫真' }
 ]
 
 const photoGallery = ref([])
 
-// 2. 自動掃描資料夾（路徑改為 gallery/light-weight/）
-const loadPhotos = () => {
-  // 記得去建立這個資料夾：assets/images/gallery/light-weight/
-  const images = import.meta.glob('@/assets/images/gallery/light-weight/*.{png,jpg,jpeg,webp}', { eager: true })
-  
-  const allPhotos = Object.keys(images).map((path, index) => {
-    const fullFileName = path.split('/').pop().toLowerCase()
-    const fileName = fullFileName.substring(0, fullFileName.lastIndexOf('.'))
-    
-    // 3. 目前所有圖片都先歸類到 'light'
-    // 即使檔名沒寫 light，也預設給它，這樣現在所有圖都會顯示出來
-    let category = 'light'
-    
-    // 未來若有新分類，可以在這裡加 else if
-    // if (fileName.includes('studio')) { category = 'studio' }
-
-    return {
-      id: index,
-      category: category,
-      src: images[path].default || images[path]
-    }
-  })
-  
-  photoGallery.value = allPhotos
+// 2. 透過 API 載入資料
+const loadPhotos = async () => {
+  try {
+    const data = await fetchLightWeightPortfolio();
+    photoGallery.value = data;
+  } catch (error) {
+    console.error("載入作品失敗:", error);
+  }
 }
 
 onMounted(() => {
